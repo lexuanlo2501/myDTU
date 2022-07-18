@@ -50,10 +50,11 @@ app.post('/register',async(req,res)=>{
     try {
         const hashedPassword =  bcrypt.hash(req.body.password,10) ;
         users.push({
-            id:Date.now().toString(),
+            id:req.body.number,
             name:req.body.name,
             email:req.body.email,
-            password:(await hashedPassword).toString()
+            password:(await hashedPassword).toString(),
+
         });
         res.redirect('/login');
       } 
