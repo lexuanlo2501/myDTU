@@ -58,11 +58,14 @@ if (process.env.NODE_ENV !== 'production') {
       else{
       try{
       const User = new Users({
-        _id: req.body.Student_Id,
+        _id: req.body.Student_id,
         full_name: req.body.name,
         email: req.body.email,
         password: hashedPassword,
-        gender:req.body.gender
+        gender:req.body.gender,
+        date_of_birth:req.body.date_of_birth,
+        PlaceOfBirth:req.body.PlaceOfBirth,
+        study_major:req.body.study_major
 
       });
       await User.save();

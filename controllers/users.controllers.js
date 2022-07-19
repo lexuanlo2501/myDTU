@@ -19,24 +19,7 @@ const PassportAuth = ()=>{
       })
 }
 
-const createUser = async (req,res)=>{
-    let  user = req.body;
-    user = {
-        ...user,
-        password: await  bcrypt.hash(user.password, 10)
 
-    }
-    console.log('user: ',user);
-    try {
-
-        await generateUsers(user);
-        res.status(201)
-    } catch (error) {
-        res.status(error).json();
-    }
-   
-
-}
 const handleLogout = (req,res)=>{
     req.logOut((error)=>{
         if(error) return next(error);

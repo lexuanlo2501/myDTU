@@ -21,6 +21,22 @@ const Users = new mongoose.Schema({
                 type:String,
                 required:true
             },
+            date_of_birth:{
+                type:Date,
+                required:true
+            },
+            PlaceOfBirth:{
+                type:String,
+                required:true
+            },
+            study_major:{
+                type:String,
+                required:true
+            },
+            first_time_signin:{
+                type:Boolean,
+                default:true
+            }
           
 
 
