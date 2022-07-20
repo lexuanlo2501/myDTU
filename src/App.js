@@ -9,7 +9,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route
-            path='/Signin-Signun'
+            path='/Signin-Signun' // cái path này nên dành cho chức năng đăng xuất , sửa lại thành '/Login'
             element={<SigninSignun/>}
           />
 
