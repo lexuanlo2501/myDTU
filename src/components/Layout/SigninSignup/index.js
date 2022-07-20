@@ -7,8 +7,7 @@ import {
     
 } from '@fortawesome/free-solid-svg-icons';
 import OptionItem from "./OptionItem";
-import Signin from "./Signin";
-import Signup from "./Signup";
+
 
 import { useState } from "react";
 
@@ -56,15 +55,10 @@ const infor_option = [
 ]
 
 
-function SigninSignup() {
+function SigninSignup({children}) {
 
-    const [signin, setSignin] = useState(true)
-
-    const signup_page = () => {
-        setSignin(pre => !pre)
-    }
-
-
+    let isOption = children.props.isOption
+    
     return ( <div className={cx('wrapper')}>
         <div className={cx('login')}>
             <div className={cx('top')}>
@@ -75,24 +69,24 @@ function SigninSignup() {
             <div className={cx('main')}>
 
                 <div className={cx('main__infor')}>
-                    <div className={cx('overlay')}></div>
-
-
                     {
-                        signin &&
-                        <div className={cx('option')}>
-                            {
-                                infor_option.map((item, index) => {
-                                    return <OptionItem key={index} title={item.title} icon={item.icon}/>
-                                })
-                            }
-                            
-                        </div>
+                        isOption && (
+                            <div className={cx('option')}>
+                                {
+                                    infor_option.map((item, index) => {
+                                        return <OptionItem key={index} title={item.title} icon={item.icon}/>
+                                    })
+                                }
+                                
+                            </div>
 
+                        )
+                        
                     }
+                    <div className={cx('overlay')}></div>
                     <div className={cx('form')}>
-                       
-                        {signin ? <Signin onClick={signup_page}/> : <Signup onClick={signup_page}/>}
+                        {children}
+                        {/* <FormSignin onClick={signup_page}/> */}
                     </div>
                    
 

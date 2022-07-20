@@ -36,15 +36,16 @@
         }
     }
 
+    &+& {
+        margin-top: 32px;
+    }
+
     
 }
 
-.form-input + .form-input {
-    margin-top: 32px;
 
-}
-
-.login-btn {
+.btn-main {
+    display: inline-block;
     margin-top: 15px;
     font-size: 20px;
     color: #fff;
@@ -68,22 +69,47 @@
     background-color: rgb(135, 135, 135);
 }
 
-.signup-btn {
+.btn-sub {
+    display: inline-block;
     margin-top: 20px;
     font-size: 17px;
     background-color: transparent;
     font-weight: 700;
-    color: rgb(179, 68, 66);
-    border-bottom: 2px solid #333;
+    color: #333;
+    border-bottom: 3px solid rgb(238, 105, 105);
     cursor: pointer;
 }
 
 
 // SIGN UP
 
+.wrapper-signup {
+    position: relative;
+    h2 {
+        font-size: 28px;
+        color: rgb(211, 85, 76);
+    }
+}
+
+.line-cross {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 0.7px;
+    height: 218px;
+    background-color: rgb(153, 153, 153);
+    z-index: 20;
+}
+
+.form-signup {
+    display: flex;
+    justify-content: space-around;
+}
+
 .signup-input {
     font-size: 17px;
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
     border-bottom: 2px solid rgb(94, 94, 94);
 }
 
@@ -94,4 +120,24 @@
 
 .login-btn-custom {
     font-size: 20px;
+}
+
+select {
+    padding: 3px 10px;
+    &+& {
+        margin-left: 10px;
+    }
+}
+
+
+.left-form div+div, .right-form div+div {
+    margin-top: 15px;;
+}
+
+
+label[for], input[type=radio] {
+    cursor: pointer;
+}
+label + input[type=radio] {
+    margin-left: 20px;
 }

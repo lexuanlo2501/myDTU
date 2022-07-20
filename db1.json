@@ -1,0 +1,31 @@
+{
+  "users": [
+    {
+      "code": 123,
+      "name": "Le Xuan Thang",
+      "email": "lexuanthang@gmail.com",
+      "password": "123456",
+      "gender": "male",
+      "dateOfBirth": "",
+      "major": "IT"
+    },
+    {
+      "code": 456,
+      "name": "Le Xuan Nu",
+      "email": "lexuannu@gmail.com",
+      "password": "123456",
+      "gender": "male",
+      "dateOfBirth": "",
+      "major": "IT"
+    },
+    {
+      "id": 523,
+      "name": "Le Van A",
+      "email": "levana@gmail.com",
+      "password": "123456",
+      "gender": "male",
+      "dateOfBirth": "",
+      "major": "IT"
+    }
+  ]
+}
