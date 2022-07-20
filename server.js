@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
   }
-  
+  const path = require('path');
   const express = require('express')
   const app = express()
   const bcrypt = require('bcrypt')
@@ -12,14 +12,16 @@ if (process.env.NODE_ENV !== 'production') {
   const Users = require('./models/users.mongo');
   const initializePassport = require('./security/passport-config');
   const mongoose = require('mongoose');
+
+ app.use(express.json())
   const PORT=3000;
-  initializePassport(
+   initializePassport(
     passport,
     email=>Users.findOne({email:email}),
     id => Users.findOne({_id:id})
   )
   
-  const users = []
+
   
   app.set('view-engine', 'ejs')
   app.use(express.urlencoded({ extended: false }))
@@ -33,23 +35,31 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(passport.session())
   app.use(methodOverride('_method'))
   
-  app.get('/', checkAuthenticated, (req, res) => {
-    res.render('index.ejs', { name: req.user.name })
-  })
+  app.get('/', checkAuthenticated, async(req, res) => {
+    console.log(req.user.id);
+    res.sendFile(path.join(__dirname,'.','index.html'));
+  
+    
+ 
+});
+app.get('/user',async (req,res)=>{
+  const user = await Users.findById(req.user.id);
+  res.json(user);
+})
   
   app.get('/login', checkNotAuthenticated, (req, res) => {
-    res.render('login.ejs')
-  })
+    res.render('login.ejs');
+  });
   
   app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
-  }))
+  }));
   
   app.get('/register', checkNotAuthenticated, (req, res) => {
     res.render('register.ejs')
-  })
+  });
   
   app.post('/register', checkNotAuthenticated, async (req, res) => {
     try {
@@ -57,6 +67,7 @@ if (process.env.NODE_ENV !== 'production') {
       if(await Users.findOne({email:req.body.email}))   res.send(`Error , user's email  already exists` );
       else{
       try{
+        console.log(req.body);
       const User = new Users({
         _id: req.body.Student_id,
         full_name: req.body.name,
@@ -74,7 +85,7 @@ if (process.env.NODE_ENV !== 'production') {
       
     }
      
-      console.log(users);
+      
       res.redirect('/login')
     }
     } catch (error){
@@ -85,7 +96,7 @@ if (process.env.NODE_ENV !== 'production') {
     
   })
   
-  app.delete('/logout', (req, res) => {
+  app.get('/logout', (req, res) => {
     req.logOut((err)=>{
       if(err) return next(err);
       res.redirect('/login')
@@ -95,7 +106,7 @@ if (process.env.NODE_ENV !== 'production') {
   
   function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-      return next()
+      return next();
     }
   
     res.redirect('/login')
