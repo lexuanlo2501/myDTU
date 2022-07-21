@@ -12,20 +12,20 @@ if (process.env.NODE_ENV !== 'production') {
   const Users = require('./models/users.mongo');
   const initializePassport = require('./security/passport-config');
   const mongoose = require('mongoose');
-
- app.use(express.json())
-  const PORT=3000;
+  
+ app.use(express.json());
+  const PORT=5000;
    initializePassport(
     passport,
     email=>Users.findOne({email:email}),
     id => Users.findOne({_id:id})
-  )
-  
+  );
+  const CLIENT_URL = process.env.CLIENT_URL;
 
   
-  app.set('view-engine', 'ejs')
+ // app.set('view-engine', 'ejs')
   app.use(express.urlencoded({ extended: false }))
-  app.use(flash())
+  app.use(flash());
   app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -37,7 +37,7 @@ if (process.env.NODE_ENV !== 'production') {
   
   app.get('/', checkAuthenticated, async(req, res) => {
     console.log(req.user.id);
-    res.sendFile(path.join(__dirname,'.','index.html'));
+    res.redirect(`${process.env.CLIENT_URL}`);
   
     
  
@@ -48,23 +48,23 @@ app.get('/user',async (req,res)=>{
 })
   
   app.get('/login', checkNotAuthenticated, (req, res) => {
-    res.render('login.ejs');
+    res.redirect(`${process.env.CLIENT_URL}/login`);
   });
   
   app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: '/login',
+    failureRedirect: `${CLIENT_URL}/login`,
     failureFlash: true
   }));
   
   app.get('/register', checkNotAuthenticated, (req, res) => {
-    res.render('register.ejs')
+      res.redirect(`${process.env.CLIENT_URL}/register`);
   });
   
   app.post('/register', checkNotAuthenticated, async (req, res) => {
     try {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      if(await Users.findOne({email:req.body.email}))   res.send(`Error , user's email  already exists` );
+      if(await Users.findOne({email:req.body.email}))   res.json({errorMessage:`Error , user's email  already exists`});
       else{
       try{
         console.log(req.body);
@@ -81,17 +81,14 @@ app.get('/user',async (req,res)=>{
       });
       await User.save();
     } catch (error){
-      return res.send(error.message);
-      
+     return res.status(500).json({errorMessage:error.message});
     }
-     
-      
-      res.redirect('/login')
+     res.redirect(`${CLIENT_URL}/login`);
     }
     } catch (error){
       console.log(error);
-      res.send(error);
-      res.redirect('/register')
+      res.status(500).json({errorMessage:error.message});
+     
     }
     
   })
@@ -99,7 +96,7 @@ app.get('/user',async (req,res)=>{
   app.get('/logout', (req, res) => {
     req.logOut((err)=>{
       if(err) return next(err);
-      res.redirect('/login')
+      res.redirect(`${CLIENT_URL}/logout`);
 
     });
   })
@@ -109,7 +106,7 @@ app.get('/user',async (req,res)=>{
       return next();
     }
   
-    res.redirect('/login')
+    res.redirect('/login');
   }
   
   function checkNotAuthenticated(req, res, next) {
