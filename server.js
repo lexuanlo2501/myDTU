@@ -12,7 +12,7 @@ if (process.env.NODE_ENV !== 'production') {
   const Users = require('./models/users.mongo');
   const initializePassport = require('./security/passport-config');
   const mongoose = require('mongoose');
-  
+  const cors = require('cors');
  app.use(express.json());
   const PORT=5000;
    initializePassport(
@@ -23,7 +23,14 @@ if (process.env.NODE_ENV !== 'production') {
   const CLIENT_URL = process.env.CLIENT_URL;
 
   
- // app.set('view-engine', 'ejs')
+ app.set('view-engine', 'ejs')
+ app.use(
+  cors({
+    origin: `${CLIENT_URL}`,
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
   app.use(express.urlencoded({ extended: false }))
   app.use(flash());
   app.use(session({
@@ -34,32 +41,31 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(passport.initialize())
   app.use(passport.session())
   app.use(methodOverride('_method'))
-  
-  app.get('/', checkAuthenticated, async(req, res) => {
-    console.log(req.user.id);
-    res.redirect(`${process.env.CLIENT_URL}`);
-  
-    
- 
-});
+// Phần comment không cần để ý
+ /* app.get('/', checkAuthenticated, async(req, res) => {
+    console.log('req.user = ',req.user);
+    res.render('index.ejs');
+});*/
 app.get('/user',async (req,res)=>{
-  const user = await Users.findById(req.user.id);
-  res.json(user);
+  console.log(req.user);
+  const userResponse = req.user;
+  delete userResponse.password;
+  res.json(userResponse);
 })
   
-  app.get('/login', checkNotAuthenticated, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login`);
+ /* app.get('/login', checkNotAuthenticated, (req, res) => {
+    res.render(`login.ejs`);
   });
-  
+  */
   app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: `${CLIENT_URL}/login`,
+    failureRedirect: `/login`,
     failureFlash: true
   }));
   
-  app.get('/register', checkNotAuthenticated, (req, res) => {
-      res.redirect(`${process.env.CLIENT_URL}/register`);
-  });
+ /* app.get('/register', checkNotAuthenticated, (req, res) => {
+      res.render(`register.ejs`);
+  });*/
   
   app.post('/register', checkNotAuthenticated, async (req, res) => {
     try {
@@ -83,7 +89,7 @@ app.get('/user',async (req,res)=>{
     } catch (error){
      return res.status(500).json({errorMessage:error.message});
     }
-     res.redirect(`${CLIENT_URL}/login`);
+     res.redirect(`/login`);
     }
     } catch (error){
       console.log(error);
@@ -93,21 +99,21 @@ app.get('/user',async (req,res)=>{
     
   })
   
-  app.get('/logout', (req, res) => {
+  app.post('/logout', (req, res) => {
     req.logOut((err)=>{
       if(err) return next(err);
-      res.redirect(`${CLIENT_URL}/logout`);
+      res.redirect(`${CLIENT_URL}/login`);
 
     });
   })
   
-  function checkAuthenticated(req, res, next) {
+  /*function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     }
   
     res.redirect('/login');
-  }
+  }*/
   
   function checkNotAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
