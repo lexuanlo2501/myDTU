@@ -41,7 +41,7 @@ const infor_option = [
     },
     {
         title: 'Lịch học',
-        icon: 'https://cdn-icons.flaticon.com/png/512/591/premium/591607.png?token=exp=1658172993~hmac=a966a36c93dee67fded0ac94a9eadeaa',
+        icon: 'https://cdn-icons-png.flaticon.com/512/3143/3143636.png',
     },
     {
         title: 'Diễn đàn',

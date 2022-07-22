@@ -91,7 +91,7 @@ function Signup() {
 
             <br/>
 
-            <Link to='/signin' replace className={cx('btn-sub')} >
+            <Link to='/login' replace className={cx('btn-sub')} >
                 <FontAwesomeIcon icon={faAnglesLeft}/>   <span>Đăng nhập</span>
             </Link>
 

@@ -2,7 +2,6 @@ import {Fragment, useState} from 'react';
 import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Layout/Home';
 import SigninSignup from './components/Layout/SigninSignup';
-import SigninSignun from './components/Layout/SigninSignup';
 import FormSignin from './components/Layout/SigninSignup/FormSignin';
 import Signup from './components/Layout/SigninSignup/Signup';
 import UserTest from './components/UserTest';
@@ -20,11 +19,11 @@ function App() {
           <Router>
             <Routes>
                 <Route
-                  path='/Signin'
+                  path='/login'
                   element={<SigninSignup><FormSignin isOption setToken={setToken}/></SigninSignup>}
                 />
                 <Route
-                  path='/Signup'
+                  path='/register'
                   element={<SigninSignup><Signup/></SigninSignup>}
                 />
             </Routes>
