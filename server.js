@@ -23,10 +23,10 @@ if (process.env.NODE_ENV !== 'production') {
   const CLIENT_URL = process.env.CLIENT_URL;
 
   
- app.set('view-engine', 'ejs')
+ //app.set('view-engine', 'ejs')
  app.use(
   cors({
-    origin: `${CLIENT_URL}`,
+    origin:[`${CLIENT_URL}`,`${CLIENT_URL}/login`,`${CLIENT_URL}/register`],
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
@@ -46,26 +46,36 @@ if (process.env.NODE_ENV !== 'production') {
     console.log('req.user = ',req.user);
     res.render('index.ejs');
 });*/
-app.get('/user',async (req,res)=>{
+app.get('/user',checkAuthenticated,async (req,res)=>{
   console.log(req.user);
   const userResponse = req.user;
   delete userResponse.password;
-  res.json(userResponse);
-})
+  res.json(req.user.email);
+});
   
  /* app.get('/login', checkNotAuthenticated, (req, res) => {
     res.render(`login.ejs`);
   });
   */
   app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: `/login`,
+    successRedirect: `/login/success`,
+    failureRedirect: `/login/failure`,
     failureFlash: true
   }));
   
  /* app.get('/register', checkNotAuthenticated, (req, res) => {
       res.render(`register.ejs`);
   });*/
+  app.get('/login/success',(req,res)=>{
+    res.status(200).json({
+      authenticate:true
+    })
+  });
+  app.get('/login/failure',(req,res)=>{
+    res.status(401).json({
+      authenticate:false
+    });
+  });
   
   app.post('/register', checkNotAuthenticated, async (req, res) => {
     try {
@@ -89,7 +99,7 @@ app.get('/user',async (req,res)=>{
     } catch (error){
      return res.status(500).json({errorMessage:error.message});
     }
-     res.redirect(`/login`);
+     res.redirect(`${CLIENT_URL}/login`);
     }
     } catch (error){
       console.log(error);
@@ -102,23 +112,26 @@ app.get('/user',async (req,res)=>{
   app.post('/logout', (req, res) => {
     req.logOut((err)=>{
       if(err) return next(err);
-      res.redirect(`${CLIENT_URL}/login`);
+      res.send('loggedout');
 
     });
   })
   
-  /*function checkAuthenticated(req, res, next) {
+  function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     }
   
-    res.redirect('/login');
-  }*/
+    res.send('error');
+  }
   
   function checkNotAuthenticated(req, res, next) {
+    console.log(req.body);
     if (req.isAuthenticated()) {
-      return res.redirect('/')
+      
+      return res.status(200).redirect(`/user`);
     }
+
     next()
   }
   
