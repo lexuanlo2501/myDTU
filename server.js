@@ -72,8 +72,9 @@ app.get('/user',checkAuthenticated,async (req,res)=>{
     })
   });
   app.get('/login/failure',(req,res)=>{
+      const [message] = req.flash().error
     res.status(401).json({
-      authenticate:false
+       message
     });
   });
   
@@ -112,7 +113,7 @@ app.get('/user',checkAuthenticated,async (req,res)=>{
   app.post('/logout', (req, res) => {
     req.logOut((err)=>{
       if(err) return next(err);
-      res.send('loggedout');
+      res.json({authenticate:false});
 
     });
   })
@@ -122,7 +123,7 @@ app.get('/user',checkAuthenticated,async (req,res)=>{
       return next();
     }
   
-    res.send('error');
+    res.status(401).json({message:'User is not authenticated !'});
   }
   
   function checkNotAuthenticated(req, res, next) {
