@@ -36,8 +36,12 @@ const Users = new mongoose.Schema({
             first_time_signin:{
                 type:Boolean,
                 default:true
-            }
-          
+            },
+            role:{
+                type:String,
+                default:'Sinh viên'
+            },
+            
 
 
 
