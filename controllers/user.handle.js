@@ -36,9 +36,11 @@ handleRegister = async(req,res)=>{
         res.status(200).json({loggedout:true});
     });
   }
-  const userLoginSuccess = (req,res)=>{
-    console.log('success');
+  const userLoginSuccess = (req,res,next)=>{
+    console.log(req.user.role);
+   if(req.user.role==='Admin') return res.redirect('/root');
     res.status(200).json({authenticate:true});
+   
   }
   const userLoginFailure =(req,res)=>{
       let error =require('../security/passport.config').err;
