@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Class= new mongoose.Schema({
     content_type:{
         type:String,
-        default:`Lớp ${this.class_name}`
+        default:`Thông tin lớp học`
     },
     _id:{ 
         type:String,
@@ -11,14 +11,14 @@ const Class= new mongoose.Schema({
     signUpCode:{
         type:String,
         required:[true,'Mã đăng ký lớp học không được để trống']
-    },
+    }, 
     group_name:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref:'course-Group',
         required:[true,'Lớp phải có mã chuyên ngành']
     },
     course:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref:'course',
         required:[true,'Mã chuyên ngành  không được để trống']
     },
@@ -34,8 +34,16 @@ const Class= new mongoose.Schema({
         type:Number,
         required:[true,'Số tín chỉ không được để trống']
     },
-    lecturer:{
+    semester:{
         type:String,
+        required:[true,'Học kỳ không được để trống']
+    },
+    year:{
+        type:String,
+        required:[true,'Năm học không được để trống']
+    },
+    lecturer:{
+        type:[String],
         required:[true,'Tên giảng viên không được để trống']
     },
     remaining_seats:{
@@ -43,10 +51,19 @@ const Class= new mongoose.Schema({
         min:[0,'Số chỗ còn lại không được dưới 0'],
         required:[true,'Số chỗ còn lại không được để trống']
     },
+    avaible_seats:{
+        type:Number,
+        min:0,
+        required:true
+    },
+    occupied_seats:{
+        type:Number,
+        min:0,
+    }
+    ,
     Student_Number:{
         type:Number,
-        min:[0,'Sỹ số không được dưới 0'],
-        default:0
+        default:this.occupied_seats
     },
     available:{
         type:Boolean,
@@ -63,32 +80,33 @@ const Class= new mongoose.Schema({
             starting_date:undefined,
             ending_date:undefined
         },
-        required:[true,'Tuần học không được để trống']
+        required:[true,'Thời gian học không được để trống']
     },
-    Schedule:{
+    
+    timeAndplace:{
         type:[Object],
-        required:[true,'Lịch học không được để trống']
-     },
-    prerequisite_course:{
+        required:true
+    },
+    cancel_weeks:{
+        type:[Object],
+        required:true
+    },
+    class_status:{
         type:String,
+        required:[true,'Trạng thái lớp học không được để trống'],
+        default:'Lớp Học Chưa Bắt Đầu'
+        
+    }
+    ,
+    prerequisite_course:{
+        type:[String],
        
     },
     parallel_subjects:{
         type:[String],
        
     },
-    students_registered:{
-        type:[Object],
-        min:0
-    },
-    semester:{
-        type:String,
-        required:[true,'Học kỳ không được để trống']
-    },
-    year:{
-        type:String,
-        required:[true,'Năm học không được để trống']
-    }
+   
 
 });
 module.exports = mongoose.model("Class",Class);

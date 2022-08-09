@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const root_router = require('../admin/admin.router');
 const passport = require('passport');
-const {handleRegister,handleLogout,userLoginSuccess,userLoginFailure} = require('../../controllers/user.handle');
+const {handleRegister,handleLogout,userLoginSuccess,userLoginFailure} = require('../../controllers/users/user.auth');
 const {checkAuthenticated,checkNotAuthenticated,isAdmin} = require('../../security/user.auth');
 
 
 
 router.get('/user',checkAuthenticated,async(req,res)=>{
-    res.json(req.user);
+   res.status(200).json({...req.user._doc, password:undefined, __v:undefined});
 });
 router.post('/login',checkNotAuthenticated,passport.authenticate('local',{  successRedirect: `/login/success`,failureRedirect: `/login/failure`}));
 

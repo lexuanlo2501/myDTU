@@ -39,6 +39,11 @@ const Users = new mongoose.Schema({
                 type:String,
                 required:[true,'Người dùng cần phải nhập ngành học của mình']
             },
+            department:{
+                type:String,
+                
+            }
+            ,
             first_time_signin:{
                 type:Boolean,
                 default:true

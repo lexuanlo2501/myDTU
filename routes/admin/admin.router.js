@@ -1,35 +1,26 @@
-const express = require('express');
-const Root_router = express.Router();
-const {
-    addClass,updateClass,
-    deleteClass,getClass,
-    addCourseGroup,updateCourseGroup,
-    deleteCourseGroup,getCourseGroup,
-    addCourse,updateCourse,
-    deleteCourse,getCourse,
-    getAllClasses,getAllCourses,getAllCourseGroups
-    } = require('../../controllers/admin.controller');
+const Root_router = require('express').Router();
+const user_router = require('./admin-user/admin-user.router');
+const class_router = require('./study-info/class.router');
+const course_router = require('./study-info/course.router');
+const group_router = require('./study-info/courseGroup.router');
+const schedule_router = require('./study-info/schedule.router');
 Root_router.get('/',(req,res)=>{
     res.json({message:`Chào mừng ${req.user.role} trở lại`});
 });
-Root_router.get('/courseGroup/:id',getCourseGroup);
-Root_router.post('/addCourseGroup',addCourseGroup);
-Root_router.patch('/updateCourseGroup/:id',updateCourseGroup);
-Root_router.delete('/deleleCourseGroup/:id',deleteCourseGroup);
 
-Root_router.get('/course/:id',getCourse);
-Root_router.post('/addCourse',addCourse);
-Root_router.patch('/updateCourse/:id',updateCourse);
-Root_router.delete('/deleleCourse/:id',deleteCourse);
-
-Root_router.get('/class/:id',getClass);
-Root_router.post('/addClass',addClass);
-Root_router.patch('/updateClass/:id',updateClass);
-Root_router.delete('/deleleClass/:id',deleteClass);
-
-Root_router.get('/getAllCoures',getAllCourses);
-Root_router.get('/getAllClasses',getAllClasses);
-Root_router.get('/getAllCourseGroups',getAllCourseGroups);
+Root_router.use('/',user_router);
+Root_router.use('/',class_router);
+Root_router.use('/',course_router);
+Root_router.use('/',group_router);
+Root_router.use('/',schedule_router);
 
 
 module.exports = Root_router;
+
+
+
+
+
+
+
+

@@ -11,6 +11,7 @@ const courseGroup = new mongoose.Schema({
     },
     group_name:{
         type:String,
+        default:this._id,
         required:[true,'Thiếu tên nhóm ngành']
     },
     courses:[{type:String,ref:'course'}]
