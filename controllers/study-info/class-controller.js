@@ -1,5 +1,6 @@
 const Class = require('../../models/classes.mongo');
 const Schedule = require('../../models/class-schedule.mongo');
+const Schedule_Generator = require('./schedule-generator');
 const addClass = async (req,res)=>{
     try{
         const newClass = new Class({
@@ -8,39 +9,11 @@ const addClass = async (req,res)=>{
 
         await newClass.save();
         const {_id,class_name,semester,year,lecturer,from_to,timeAndplace,cancel_weeks} = req.body;
-        const Data = [];
-for(let i = 0 ; i< from_to.ending_week - from_to.starting_week;i++)
-{
-        const week  = i+from_to.starting_week;
-        Data.push({
-        week,
-        schedule:timeAndplace.map(data=>{
-            if(cancel_weeks.length===0){
-                return data;
-            }
-
-            else{
-            const test = cancel_weeks.find(value=>value.week_date === data.week_date);
-            if(test.abort.find(value=>value === week)) return undefined;
-            else return data;
-            }
-        })
-    });
-}
+        const Data = Schedule_Generator(from_to,timeAndplace,cancel_weeks);
 const newSchedule = new Schedule({
-    _id,
-    class_name,
-    semester,
-    year,
-    lecturer,
-    from_to,
-    timeAndplace,
-    cancel_weeks,
-    detailed_Schedule:Data
-
-});
+    _id,class_name,semester,year,lecturer,from_to,timeAndplace,cancel_weeks,detailed_Schedule:Data});
     await newSchedule.save();
-        return res.status(200).json({message:`Bạn đã thêm thành công lớp ${newClass.class_name}`});
+        return res.status(200).json({message:`Bạn đã thêm thành công thông tin và lịch học lớp ${newClass.class_name}`});
     } catch (error){
         return res.status(401).json({errorMessage:error.message});
     }
@@ -52,7 +25,6 @@ const  updateClass = async (req,res)=>{
         const result = await Class.findById(id);
         result.overwrite({...result._doc,...req.body});
         await result.save();
-        console.log(result);
         res.status(200).json({message:`Bạn đã sửa thành công thông tin lớp : ${result.class_name}`});
     } catch(error){
         return res.status(401).json({errorMessage:`Không thể sửa nội dung lớp : ${id}`});
@@ -64,7 +36,8 @@ const updateManyClasses = async(req,res)=>{
         const result = await Class.updateMany({...req.body.conditions},{...req.body.updated});
         res.status(200).json({message:`Bạn đã sửa đổi thành công thông tin của ${result.modifiedCount} lớp`});
     } catch (error){
-        res.status(400).json({errorMessage:`Không thể sửa đổi thông tin lớp học theo yêu cầu : ${error.message}`});
+        console.log(error);
+        res.status(400).json({errorMessage:`Không thể sửa đổi thông tin lớp học theo yêu cầu : ${error}`});
     }
 }
 
@@ -74,6 +47,7 @@ const deleteClass = async (req,res)=>{
         await Class.findByIdAndRemove(id);
         return res.status(200).json({message:`Bạn đã xóa thành công lớp học : ${id}`});
     } catch (error) {
+       
         return res.status(401).json({errorMessage:`Không thể xóa nội dung lớp học : ${id}`});
     }
 }

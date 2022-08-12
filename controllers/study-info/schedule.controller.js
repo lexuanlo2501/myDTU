@@ -1,5 +1,5 @@
 const Schedule = require('../../models/class-schedule.mongo');
-
+const Schedule_Generator = require('./schedule-generator');
 const getScheduleByid  =async(req,res)=>{
     const {id} = req.params;
     try{
@@ -15,18 +15,23 @@ const getAllSchedule = async (req,res)=>{
 }
 
 const updateSchedule = async (req,res)=>{
-    const {modified} = req.body;
+    const {from_to,timeAndplace,cancel_weeks,modified} = req.body;
     const {id} = req.params;
    try{ const result = await Schedule.findById(id);
-    const {detailed_Schedule} = result._doc;
+    let {detailed_Schedule} = result._doc;
+    if(!from_to||!timeAndplace||!cancel_weeks && modified.length===0){
     for(let i = 0 ; i<detailed_Schedule.length;i++){
         const found = modified.find(value=>value.week === detailed_Schedule[i].week);
         if(found) detailed_Schedule[i] = found ;
     }
     delete req.body.modified; 
-    result.overwrite({...result._doc,...req.body,detailed_Schedule});
-    await result.save();
-    res.status(200).json({message:`Bạn đã chỉnh sửa thành công nội dung lịch học : ${id}`});
+}
+
+    else detailed_Schedule = Schedule_Generator(from_to,timeAndplace,cancel_weeks);
+   
+result.overwrite({...result._doc,...req.body,detailed_Schedule});
+await result.save();
+    res.status(200).json({message:`Bạn đã sửa thành công lịch học lớp ${result.class_name}`});
     } catch{
     res.status(404).json({errorMessage:`Không tìm thấy nội dung yêu cầu : ${id}`});
     }

@@ -63,7 +63,7 @@ const modifyUser = async(req,res)=>{
 const patchManyUsers = async (req,res)=>{
     try {
         const result = await Users.updateMany({...req.body.conditions},{...req.body.updated});
-        res.status(200).json({message:`Bạn đã sửa đổi thành công thông tin của ${result.nModified} người dùng`})
+        res.status(200).json({message:`Bạn đã sửa đổi thành công thông tin của ${result.modifiedCount} người dùng`})
     } catch (error){
         res.status(400).json({errorMessage:`Không thể sửa đổi thông tin người dùng theo yêu cầu : ${error.message}`});
     }

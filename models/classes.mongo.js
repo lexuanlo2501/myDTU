@@ -67,9 +67,14 @@ const Class= new mongoose.Schema({
     },
     available:{
         type:Boolean,
+        default:true
     },
     signUpTime:{
-        type:String,
+        type:Object,
+        default:{
+            start:'',
+            end:''
+        },
         required:[true,'Thời gian đăng ký không được để trống']
     },
     from_to:{
@@ -109,4 +114,18 @@ const Class= new mongoose.Schema({
    
 
 });
+
+function handleModel(){
+    const date = new Date();
+    console.log(date);
+    console.log(this);
+    const due_Date = new Date(this.signUpTime.end);
+
+    if(this.avaible_seats===0 || date>= due_Date) this.available= false;
+    this.Student_Number = this.occupied_seats;
+}
+Class.pre('save',handleModel);
+
+
+
 module.exports = mongoose.model("Class",Class);
