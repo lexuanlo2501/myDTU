@@ -1,4 +1,4 @@
-const {addClass,updateClass,updateManyClasses,deleteClass,deleteManyClasses,getClass,getAllClasses,findClasses} = require('../../../controllers/study-info/class-controller');
+const {addClass,updateClass,updateManyClasses,deleteClass,deleteManyClasses,getClass,getAllClasses,findClasses} = require('../../../controllers/study-info/class&course/class-controller');
 const class_router = require('express').Router();
 
 class_router.get('/class/:id',getClass);

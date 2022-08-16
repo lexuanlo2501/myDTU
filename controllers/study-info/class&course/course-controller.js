@@ -1,4 +1,4 @@
-const course =  require('../../models/course.mongo');
+const course =  require('../../../models/class&courses/course.mongo');
 
 const addCourse  = async(req,res)=>{
     try{

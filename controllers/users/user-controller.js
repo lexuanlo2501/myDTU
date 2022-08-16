@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const Users = require('../../models/users.mongo');
+const Users = require('../../models/users/users.mongo');
 const getAllUsers = async(req,res)=>{
     try{
         const results = await Users.find();

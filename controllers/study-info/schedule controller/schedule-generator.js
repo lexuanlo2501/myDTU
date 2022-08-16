@@ -1,4 +1,7 @@
 const validate = (data,Week,date)=>{
+    console.log(data);
+    console.log('thứ ngày :',date.getDay());
+    console.log('thứ ngày của Week : ',Week.indexOf(data.week_day));
     if(date.getDay()!== Week.indexOf(data.week_day)) return false;
     return true;
 }

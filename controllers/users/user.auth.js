@@ -1,10 +1,10 @@
 const bcrypt = require('bcrypt');
-const Users = require('../../models/users.mongo');
-
+const Users = require('../../models/users/users.mongo');
+const UserSchedule = require('../../models/users/user.schedule');
 handleRegister = async(req,res)=>{
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        if(await Users.findOne({email:req.body.email}))   res.json({errorMessage:`Error , user's email  already exists`});
+        if(await Users.findOne({email:req.body.email}))   res.json({errorMessage:`Email người dùng đã tồn tại , vui lòng thử lại bằng email khác`});
         else{
           try{
             console.log(req.body);
@@ -20,6 +20,13 @@ handleRegister = async(req,res)=>{
               
             });
             await User.save();
+            const user_schedule = new UserSchedule({
+              _id:User._id,
+              full_name:User.full_name,
+              semester:"Học kỳ I",
+              
+            });
+            await  user_schedule.save();
           } catch (error){
             return res.status(400).json({errorMessage:error.message});
           }

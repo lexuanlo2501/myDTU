@@ -1,5 +1,5 @@
 const schedule_router = require('express').Router();
-const {getScheduleByid,getAllSchedule,findSchedule,updateSchedule,updateManySchedules,deleteSchedule,deleteManySchedules} = require('../../../controllers/study-info/schedule.controller');
+const {getScheduleByid,getAllSchedule,findSchedule,updateSchedule,updateManySchedules,deleteSchedule,deleteManySchedules} = require('../../../controllers/study-info/schedule controller/schedule.controller');
 schedule_router.get('/getSchedule/:id',getScheduleByid);
 schedule_router.get('/schedule.all',getAllSchedule);
 schedule_router.patch('/updateSchedule/:id',updateSchedule);

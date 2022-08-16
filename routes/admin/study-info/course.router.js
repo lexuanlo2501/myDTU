@@ -1,4 +1,4 @@
-const {addCourse,updateCourse,deleteCourse,getCourse,getAllCourses} = require('../../../controllers/study-info/course-controller');
+const {addCourse,updateCourse,deleteCourse,getCourse,getAllCourses} = require('../../../controllers/study-info/class&course/course-controller');
 const course_router = require('express').Router();
 
 course_router.get('/course/:id',getCourse);

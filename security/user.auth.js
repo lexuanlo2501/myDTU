@@ -3,7 +3,7 @@ function checkAuthenticated(req, res, next) {
       return next();
     }
     
-    res.status(401).json({message:'User is not authenticated !'});
+    res.status(401).json({message:'Bạn chưa đăng nhập hệ thống'});
   }
   
   function checkNotAuthenticated(req, res, next) {
@@ -16,13 +16,24 @@ function checkAuthenticated(req, res, next) {
     next()
   }
   function isAdmin(req,res,next){
-    try{
+    
     if(req.user.role === 'Admin') return next();
-     
-    return res.redirect('/user');
-    } catch{
-      return res.json({errorMessage:"Bạn chưa đăng nhập hoặc không được cấp quyền truy cập nội dung này"});
-    }
+    return res.json({errorMessage:"Bạn không được cấp quyền truy cập nội dung này"});
+    
   }
 
-  module.exports = {checkAuthenticated,checkNotAuthenticated,isAdmin};
+  function isStudent(req,res,next){
+    
+      if(req.user.role ==='Sinh viên') return next();
+      return res.json({errorMessage:"Bạn không được cấp quyền truy cập nội dung này"});
+    
+  }
+
+  function isTeacher(req,res,next){
+    if(req.user.role ==='Giảng viên') return next();
+    return res.json({errorMessage:"Bạn không được cấp quyền truy cập nội dung này"});
+    
+    
+  }
+
+  module.exports = {checkAuthenticated,checkNotAuthenticated,isAdmin,isStudent,isTeacher};

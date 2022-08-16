@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'production') {
   const cors = require('cors');
   const passport = require('passport');
   const initializePassport = require('./security/passport.config').initializePassport;
-  const Users = require('./models/users.mongo');
+  const Users = require('./models/users/users.mongo');
   const router = require('./routes/users/users.router');
   
   const PORT=5000;

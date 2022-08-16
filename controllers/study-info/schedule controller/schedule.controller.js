@@ -1,4 +1,4 @@
-const Schedule = require('../../models/class-schedule.mongo');
+const Schedule = require('../../../models/class&courses/class-schedule.mongo');
 const Schedule_Generator = require('./schedule-generator');
 const getScheduleByid  =async(req,res)=>{
     const {id} = req.params;
