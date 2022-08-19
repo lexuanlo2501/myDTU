@@ -116,9 +116,10 @@ const Class= new mongoose.Schema({
 });
 
 
-Class.pre('save',function (){
+Class.pre('update',function (){
     
    if(this.avaible_seats===0 ) this.available= false;
+   
 });
 
 

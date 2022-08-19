@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const StudentRecord = new mongoose.Schema({
+const Student_Record = new mongoose.Schema({
     _id:{
         type:Number,
         required:true
@@ -11,104 +11,41 @@ const StudentRecord = new mongoose.Schema({
     },
     passed_courses:{
         type:[Object] 
-        /*
-        
-        {
-            year:
-            semester_I:[{
-                course:
-                credits:
-                status:
-                final_score:
-            }]
-            semester_II:[{
-                course:
-                credits:
-                status:
-                final_score
-            }]
-            summer_semester:[{
-                course:
-                credits:
-                status:
-                final_score:
-            }]
-            total_credits:
-        
-        }
-        
-        */
-        
-    },
-    failed_courses:{
+        /*[{
+          course:
+          credits 
+        }]}*/
+        },
+    study_record:{
         type:[Object]
-        /*
+        /**
+         * {
+         *  year:
+         * semester_I:[{course,class,credits,score}]
+         * semesster_II:[]
+         * summer_semester:[]
         
-        {
-            year:
-            semester_I:[{
-                course:
-                credits:
-                status:
-                final_score: // String
-            }]
-            semester_II:[{
-                course:
-                credits:
-                status:
-                final_score
-            }]
-            summer_semester:[{
-                course:
-                credits:
-                status:
-                final_score:
-            }]
-        
-        }
-        
-        */
+         * }
+         * 
+         */
+    }
+,
+    overall_credits:{
+        type:Number,
+        default:0,
+        min:0
     },
-    restudy_courses:{
-        type:[Object]
-        /*
-        
-        {
-            year:
-            semester_I:[{
-                course:
-                credits:
-                status:
-                final_score: //String
-            }]
-            semester_II:[{
-                course:
-                credits:
-                status:
-                final_score
-            }]
-            summer_semester:[{
-                course:
-                credits:
-                status:
-                final_score: // String
-            }]
-        
-        }
-        
-        */
-    },
-    total_credits:{
+    overall_score:{
         type:Number,
         default:0,
         min:0
     }
 });
 
-StudentRecord.pre('save',function(){
+Student_Record.pre('save',function(){
     if(this.passed_courses.length!==0){
-        this.total_credits = this.passed_courses.reduce((prev,next)=>prev.total_credits+next.total_credits);
+        this.total_credits = this.passed_courses.reduce((prev,next)=>prev.credits+next.credits);
     }
 });
 
-module.exports = mongoose.model('StudentRecord',StudentRecord);
+module.exports = mongoose.model('Student_Record',Student_Record);

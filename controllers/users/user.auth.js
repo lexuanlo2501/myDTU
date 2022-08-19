@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const Users = require('../../models/users/users.mongo');
-const UserSchedule = require('../../models/users/user.schedule');
+const Student_Record = require('../../models/users/student-record.mongo');
+const Student_Schedule = require('../../models/users/student.schedule');
 handleRegister = async(req,res)=>{
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -20,10 +21,14 @@ handleRegister = async(req,res)=>{
               
             });
             await User.save();
-            const user_schedule = new UserSchedule({
+            const student_record = new Student_Record({
+              _id:User._id,full_name:User.full_name
+            });
+            await student_record.save();
+            const user_schedule = new Student_Schedule({
               _id:User._id,
               full_name:User.full_name,
-              semester:"Học kỳ I",
+              semester:"Học Kỳ I",
               
             });
             await  user_schedule.save();

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UserSchedule = new mongoose.Schema({
+const Student_Schedule = new mongoose.Schema({
     content_type:{
         type:String,
         default:'Lịch học sinh viên',
@@ -15,10 +15,11 @@ const UserSchedule = new mongoose.Schema({
     },
     semester:{
         type:String,
-        
+        default:''
     },
     year:{
         type:String,
+        default:''
         
     },
     semester_Starting_Date:{type:String , default:"8/22/2022"},
@@ -41,4 +42,4 @@ total_credits:{
 
 });
 
-module.exports = mongoose.model('UserSchedule',UserSchedule);
+module.exports = mongoose.model('Student_Schedules',Student_Schedule);

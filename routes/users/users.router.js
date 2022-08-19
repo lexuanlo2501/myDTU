@@ -5,7 +5,7 @@ const passport = require('passport');
 const {handleRegister,handleLogout,userLoginSuccess,userLoginFailure} = require('../../controllers/users/user.auth');
 const {checkAuthenticated,checkNotAuthenticated,isAdmin,isStudent} = require('../../security/user.auth');
 const studentHandle_router = require('./student.handle.router');
-//const {generateSchedule} = require('../../controllers/user-class.handle/user-class.controller');
+
 
 router.get('/user',checkAuthenticated,async(req,res)=>{
    res.status(200).json({...req.user._doc, password:undefined, __v:undefined});
