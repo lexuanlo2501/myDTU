@@ -13,8 +13,7 @@ const addClass = async (req,res)=>{
 const newSchedule = new Schedule({
     _id,class_name,semester,year,lecturer,from_to,timeAndplace,cancel_weeks,detailed_Schedule:Data});
     await newSchedule.save();
-    console.log('newShedule : ',newSchedule);
-        return res.status(200).json({message:`Bạn đã thêm thành công thông tin và lịch học lớp ${newClass.class_name}`});
+   return res.status(200).json({message:`Bạn đã thêm thành công thông tin và lịch học lớp ${newClass.class_name}`});
     } catch (error){
         return res.status(401).json({errorMessage:error});
     }

@@ -149,7 +149,7 @@ const checkPrerequisite = (class_arr,user_arr)=>{
 
 const Class_Subscribe = async (signUpCode,uid) =>{
     let [this_user_schedule,record_result,Class_Result] = await Promise.all([Student_Schedule.findById(uid),Student_Record.findById(uid),Class.findOne({signUpCode})]);
-    let {_id, course,class_name,credits,semester,year,class_status,prerequisite_course,occupied_seats,remaining_seats} = Class_Result._doc;
+    let {_id, course,class_name,credits,semester,year,class_status,prerequisite_course,occupied_seats,remaining_seats ,available} = Class_Result._doc;
     let Class_Schedule = await Schedule.findById(_id);
     let {semester_Starting_Date,class_registered,total_credits} = this_user_schedule._doc;
     let Schedule_Data = [...this_user_schedule._doc.User_Schedule];
@@ -163,12 +163,13 @@ const Class_Subscribe = async (signUpCode,uid) =>{
     let {passed_courses,study_record} = record_result._doc;
     
     
-
-    if(!Class_Result) throw 'Không thể tìm thấy lớp đăng ký , vui lòng xem lại mã đăng ký lớp';
+    
+    if(!Class_Result) throw `Không thể tìm thấy lớp đăng ký  theo mã đăng ký : ${signUpCode} , vui lòng xem lại mã đăng ký lớp`;
     if(checkDuplicateCourse(this_user_schedule._doc,Class_Result._doc) === true) throw 'Bạn không thể đăng ký nhiều lần một môn học trong một học kỳ';
-    if(class_status===false) throw 'Bạn không thể đăng ký lớp học do đã đủ số lượng sinh viên';
+    if(available===false) throw 'Bạn không thể đăng ký lớp học do đã đủ số lượng sinh viên';
     if(prerequisite_course.length!==0 && checkPrerequisite(prerequisite_course,passed_courses)=== false)throw `Bạn chưa hoàn thành môn tiên quyết của môn ${course} , vui lòng xem lại điều kiện tiên quyết và chọn lớp khác`;
     if(!Class_Schedule) throw 'Lịch học lớp này chưa có trong hệ thống , vui lòng đăng ký lớp khác';
+    
     
    
     class_registered.push({
@@ -178,12 +179,12 @@ const Class_Subscribe = async (signUpCode,uid) =>{
         credits
     });
     total_credits = class_registered.map(data=>data.credits).reduce((prev,next)=>prev + next);
-    
     occupied_seats =  occupied_seats + 1;
     remaining_seats=  remaining_seats - 1;
-
+    remaining_seats ===0 ? available = false : available = true ;
+    
     study_record = generateRecord(year,semester,study_record,class_data);
-    await Promise.all([Student_Record.findOneAndUpdate({_id:uid},{study_record}),Class.findOneAndUpdate({_id},{occupied_seats,remaining_seats}),Student_Record.findOneAndUpdate({_id:uid},{...record_result}), Student_Schedule.findOneAndUpdate({_id:uid},{  class_registered,detailed_Schedule,User_Schedule:[...final_schedule] ,total_credits})]);
+    await Promise.all([Student_Record.findOneAndUpdate({_id:uid},{study_record}),Class.findOneAndUpdate({_id},{occupied_seats,remaining_seats,available}),Student_Record.findOneAndUpdate({_id:uid},{...record_result}), Student_Schedule.findOneAndUpdate({_id:uid},{  class_registered,detailed_Schedule,User_Schedule:[...final_schedule] ,total_credits})]);
     return {message : `đã thêm thành công lớp ${Class_Result._doc.class_name} vào danh sách lớp đã đăng ký và lịch học của học kỳ này `};
 }
 
@@ -194,8 +195,10 @@ const Class_Remove = async (class_name,uid)=>{
     let {semester,year,class_registered,User_Schedule,total_credits} = student_schedule._doc;
     
     const class_schedule = await Schedule.findOne({semester,year,class_name});
-    
+    const class_info = await Class.findOne({class_name,semester,year});
     const {detailed_Schedule} = class_schedule._doc;
+    
+    let {_id,remaining_seats,occupied_seats,available} = class_info._doc ;
     if(class_schedule === {}) throw `Không tìm thấy thông tin lớp ${class_name} theo yêu cầu`;
             const class_result= class_registered.find(data=>data.class_name === class_name);
           
@@ -206,7 +209,7 @@ const Class_Remove = async (class_name,uid)=>{
              if(record_result) 
              {
               
-                if(semester === 'Học Kỳ I') record_result.semesterI =  record_result.semester_I.filter(data=>data.class_name!== class_name);
+                if(semester === 'Học Kỳ I') record_result.semester_I =  record_result.semester_I.filter(data=>data.class_name!== class_name);
                 else if (semester === 'Học Kỳ II') record_result.semester_II =  record_result.semester_II.filter(data=>data.class_name!== class_name);
                 else if(semester === 'Học Kỳ Hè') record_result.summer_semester =  record_result.summer_semester.filter(data=>data.class_name!== class_name);
              }
@@ -215,7 +218,6 @@ const Class_Remove = async (class_name,uid)=>{
              {
                 const {week,schedule} = detailed_Schedule[i];
                 const {week_schedule} = User_Schedule[week-1];
-                console.log(`schedule : ${schedule}`);
                 for(let j=0;j< schedule.length;j++)
                 {
                    
@@ -225,7 +227,10 @@ const Class_Remove = async (class_name,uid)=>{
                     }
                 }
              }
-            await Promise.all([ Student_Record.findByIdAndUpdate(uid,{study_record}),Student_Schedule.findByIdAndUpdate(uid,{semester,year,class_registered,User_Schedule,total_credits})]);
+             remaining_seats = remaining_seats + 1;
+             occupied_seats = occupied_seats -1;
+             remaining_seats !== 0? available = true : available = false;
+            await Promise.all([ Student_Record.findByIdAndUpdate(uid,{study_record}),Student_Schedule.findByIdAndUpdate(uid,{semester,year,class_registered,User_Schedule,total_credits}),Class.findByIdAndUpdate(_id,{ remaining_seats,occupied_seats,available})]);
             return `Lớp ${class_name} đã được xóa khỏi lịch học và các môn đã đăng ký trong học kỳ này `;
     }
 

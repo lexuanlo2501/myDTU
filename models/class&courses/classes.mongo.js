@@ -46,14 +46,15 @@ const Class= new mongoose.Schema({
         type:[String],
         required:[true,'Tên giảng viên không được để trống']
     },
-    remaining_seats:{
-        type:Number,
-        min:[0,'Số chỗ còn lại không được dưới 0'],
-        required:[true,'Số chỗ còn lại không được để trống']
-    },
     avaible_seats:{
         type:Number,
         min:0,
+        required:true
+    },
+    remaining_seats:{
+        type:Number,
+        min:[0,'Số chỗ còn lại không được dưới 0'],
+        default:this.avaible_seats,
         required:true
     },
     occupied_seats:{
@@ -61,10 +62,7 @@ const Class= new mongoose.Schema({
         min:0,
     }
     ,
-    Student_Number:{
-        type:Number,
-        default:this.occupied_seats
-    },
+  
     available:{
         type:Boolean,
         default:true
@@ -116,12 +114,16 @@ const Class= new mongoose.Schema({
 });
 
 
-Class.pre('update',function (){
-    
-   if(this.avaible_seats===0 ) this.available= false;
-   
-});
-
+Class.pre('save', function(next) {
+    console.log('activated')
+    const self = this;
+    Object.keys(this.schema.paths).forEach(function(key) {
+      if(self.schema.paths[key].options.default && self[key] === null) {
+        self[key] = self.schema.paths[key].options.default;
+      }
+    });
+    next();
+  });
 
 
 module.exports = mongoose.model("Class",Class);

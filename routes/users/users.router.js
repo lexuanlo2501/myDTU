@@ -17,5 +17,5 @@ router.use('/login/failure',userLoginFailure);
 router.post('/register', checkNotAuthenticated, handleRegister );
 router.post('/logout',handleLogout);
 router.use('/root',isAdmin,root_router);
-router.use('/',isStudent,studentHandle_router);
+router.use('/',checkAuthenticated,isStudent,studentHandle_router);
 module.exports= router;

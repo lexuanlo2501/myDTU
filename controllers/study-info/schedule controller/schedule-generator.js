@@ -31,13 +31,13 @@ const Schedule_Generator = (from_to,timeAndplace,cancel_weeks)=>{
     const start_day = new Date(from_to.starting_date).getDay();
     const Schedule = [];
     
-        if(start_day!==1 ) throw 'Ngày bắt đầu của học kỳ phải là thứ 2';
+        if(start_day!==1 ) throw 'Ngày bắt đầu của môn học phải là thứ 2';
         for(let i = 0;i<= from_to.ending_week-from_to.starting_week;i++)
         {
             const week  = i+from_to.starting_week;
             Schedule.push({
                 week,
-                schedule:timeAndplace.map(data=>{
+                schedule:timeAndplace.map(data=>{    
                 const starting_date = new Date(from_to.starting_date);
                 const cancelDate = cancel_weeks.find(value=>value.week_day === data.week_day);
                 if(!cancelDate || cancel_weeks.length===0 || !cancelDate.abort.find(value=>value===week)) {
@@ -53,5 +53,6 @@ const Schedule_Generator = (from_to,timeAndplace,cancel_weeks)=>{
     
     
 }
+
 
 module.exports = Schedule_Generator;

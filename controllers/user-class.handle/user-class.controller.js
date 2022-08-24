@@ -20,6 +20,25 @@ const registerClass = async (req,res)=>{
     }
 }
 
+const registerClasses = async (req,res)=>{
+    const {signUpCodeList} = req.body;
+    const uid = req.user._id;
+    const success = [];
+    const failure = [];
+    for(let code of signUpCodeList){
+    try{
+        const {message}  =  await Class_Subscribe(code,uid);
+      
+        success.push({ signUpCode: code ,message});
+    }
+    catch(error)
+    {
+        failure.push({signUpCode: code , message:error});
+    }
+}
+    res.status(200).json({message: `Kết quả thực hiện đăng ký các lớp  theo các mã đăng ký : ${signUpCodeList.toString()}`, info: {success,failure} });
+}
+
 const getUserSchedule = async(req,res)=>{
     const uid = req.user._id
     const user_schedule = await Student_Schedule.findById(uid);
@@ -38,6 +57,26 @@ const removeClass = async (req,res)=>{
         console.log(error);
         res.status(400).json({errorMessage:`Không thể hủy đăng ký lớp ${class_name} , vui lòng xem lại tên lớp`});
     }
-    }
+}
 
-module.exports = {registerClass,getUserSchedule,removeClass};
+const removeClasses = async (req,res)=>{
+    const {removeList} = req.body;
+    const uid = req.user._id;
+    const success = [];
+    const failure = [];
+    for(let name of removeList){
+    try{
+        const message  =  await Class_Remove(name,uid);
+      
+        success.push({ class: name ,message});
+    }
+    catch(error)
+    {
+        failure.push({signUpCode: code , message:error});
+    }
+}
+    res.status(200).json({message: `Kết quả thực hiện hủy đăng ký các lớp  theo các lớp được yêu cầu hủy : ${removeList.toString()}`, info: {success,failure} });
+}
+
+
+module.exports = {registerClass,registerClasses,getUserSchedule,removeClass,removeClasses};
