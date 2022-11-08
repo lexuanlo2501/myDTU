@@ -1,0 +1,10 @@
+"BME 201 - Nhập Môn Ngành Kỹ Thuật Y Sinh",
+"BME 314 - Kỹ Thuật Cảm Biến & Đo Lường Y Sinh",
+"BME 353 - Công Nghệ Chẩn Đoán Hình Ảnh",
+"BME 403 - Xử Lý Ảnh Y Sinh",
+"BME 404 - Thiết Bị Xét Nghiệm",
+"BME 414 - Xử Lý Tín Hiệu Y Sinh",
+"BME 415 - Vật Liệu cho Kỹ Thuật Y Sinh",
+"BME 443 - Thiết Kế Kỹ Thuật Y Sinh",
+"BME 448 - Khóa Luận Tốt Nghiệp",
+"BME 449 - Thực Tế Tốt Nghiệp"

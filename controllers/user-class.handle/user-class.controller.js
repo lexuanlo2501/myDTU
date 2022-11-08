@@ -3,14 +3,12 @@ const Student_Schedule = require('../../models/users/student.schedule');
 
 
 
-
-
-
 const registerClass = async (req,res)=>{
     const {signUpCode} = req.body;
-    const uid = req.user._id; 
+    const {uid,_id} = req.user;
+    
     try{
-        const {message}  = await Class_Subscribe(signUpCode,uid);
+        const {message}  = await Class_Subscribe(signUpCode,uid,_id);
         res.status(200).json({message:`Bạn ${message}`});
 }
     catch(error)
@@ -22,7 +20,7 @@ const registerClass = async (req,res)=>{
 
 const registerClasses = async (req,res)=>{
     const {signUpCodeList} = req.body;
-    const uid = req.user._id;
+    const {uid} = req.user;
     const success = [];
     const failure = [];
     for(let code of signUpCodeList){
@@ -40,28 +38,30 @@ const registerClasses = async (req,res)=>{
 }
 
 const getUserSchedule = async(req,res)=>{
-    const uid = req.user._id
+    const {uid} = req.user
     const user_schedule = await Student_Schedule.findById(uid);
    
     res.status(200).json({content:user_schedule._doc});
 }
 
 const removeClass = async (req,res)=>{
-    const {class_name} = req.body;
-    const uid = req.user._id;
+    const {class_id} = req.body;
+    const {uid,_id} = req.user;
     try{
-        await Class_Remove(class_name,uid);
-        res.status(200).json({message:`Bạn đã hủy đăng ký thành công lớp : ${class_name}`});
+        await Class_Remove(class_id,uid,_id);
+        res.status(200).json({message:`Bạn đã hủy đăng ký thành công lớp : ${class_id}`});
     }
     catch(error){
         console.log(error);
-        res.status(400).json({errorMessage:`Không thể hủy đăng ký lớp ${class_name} , vui lòng xem lại tên lớp`});
+        res.status(400).json({errorMessage:`Không thể hủy đăng ký lớp ${class_id} , vui lòng xem lại tên lớp`,
+                            errorLog:error
+                            });
     }
 }
 
 const removeClasses = async (req,res)=>{
     const {removeList} = req.body;
-    const uid = req.user._id;
+    const {uid} = req.user;
     const success = [];
     const failure = [];
     for(let name of removeList){
@@ -80,3 +80,5 @@ const removeClasses = async (req,res)=>{
 
 
 module.exports = {registerClass,registerClasses,getUserSchedule,removeClass,removeClasses};
+
+

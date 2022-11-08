@@ -5,16 +5,11 @@ const courseGroup = new mongoose.Schema({
         type:String,
         default:"Nhóm mã chuyên ngành"
     },
-    _id:{
+    group_id:{
         type:String,
         required:[true,"Bạn phải nhập mã chuyên ngành"]
     },
-    group_name:{
-        type:String,
-        default:this._id,
-        required:[true,'Thiếu tên nhóm ngành']
-    },
-    courses:[{type:String,ref:'course'}]
+    courses:[Object]
 });
 
 module.exports = mongoose.model("course-Group",courseGroup);

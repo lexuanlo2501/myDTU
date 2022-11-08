@@ -1,24 +1,25 @@
-const Schedule = require('../../../models/class&courses/class-schedule.mongo');
+const Class = require('../../../models/class&courses/classes.mongo')
 const Schedule_Generator = require('./schedule-generator');
-const getScheduleByid  =async(req,res)=>{
-    const {id} = req.params;
+const getSchedule  =async(req,res)=>{
+    
     try{
-        const result = await Schedule.findById(id);
+        const result = await Class.findOne({...req.body});
         res.status(200).json({content:result._doc});
     } 
     catch{
-        res.status(404).json({errorMessage:`Không tìm thấy lịch học cần tìm : ${id}`});
+        res.status(404).json({errorMessage:`Không tìm thấy lịch học cần tìm theo yêu cầu : ${{...req.body}}`});
     }
 }
 const getAllSchedule = async (req,res)=>{
-    res.status(200).json({content:await Schedule.find()});
+    res.status(200).json({content:await Class.find().select('detailed_schedule')});
 }
 
 const updateSchedule = async (req,res)=>{
-    const {from_to,timeAndplace,cancel_weeks,modified} = req.body;
-    const {id} = req.params;
-   try{ const result = await Schedule.findById(id);
-    let {detailed_Schedule} = result._doc;
+    const {class_id,from_to,timeAndplace,cancel_weeks,modified} = req.body;
+   try{ 
+
+    const result = await Class.findOne({class_id});
+    let {detailed_Schedule}  = result._doc
     if(!from_to||!timeAndplace||!cancel_weeks && modified.length===0){
     for(let i = 0 ; i<detailed_Schedule.length;i++){
         const found = modified.find(value=>value.week === detailed_Schedule[i].week);
@@ -37,26 +38,26 @@ await result.save();
     }
 }
 const findSchedule = async(req,res)=>{
-    const result = await Schedule.find({...req.body});
+    const result = await Class.find({...req.body}).select('detailed_schedule');
     if(result.length!= 0) res.status(200).json({content:result});
     else res.status(404).json({errorMessage:`Không tìm thấy nội dung theo yêu cầu`});
 }
 
 const deleteSchedule = async(req,res)=>{
-    const {id} = req.params;
+    const {class_id} = req.body;
     try{
-        await Schedule.findByIdAndRemove(id);
-        res.status(200).json({message:`Bạn đã xóa thành công lịch học : ${id}`});
+    await Class.findOneAndDelete({class_id});
+        res.status(200).json({message:`Bạn đã xóa thành công nội dung lịch học của : ${class_id}`});
     }
     catch {
-        res.status(404).json({errorMessage:`Không thể xóa lịch học : ${id}`});
+        res.status(404).json({errorMessage:`Không thể xóa lịch học : ${class_id}`});
     }
 }
 
 const deleteManySchedules = async(req,res)=>{
     try{
-    const result = await Schedule.deleteMany({...req.body});
-    res.status(200).json({message:`Bạn đã xóa thành công lịch  học của  : ${result.deletedCount} môn `});
+    const result = await Class.updateMany({...req.body},{detailed_Schedule:[]});
+    res.status(200).json({message:`Bạn đã xóa thành công lịch  học của  : ${result.length} môn `});
     } 
     catch(error){
         res.status(400).json({errorMessage:`Không thể xóa lịch học theo yêu cầu , vui lòng xem lại biểu mẫu : ${error.message}`});
@@ -73,4 +74,4 @@ const updateManySchedules  = async(req,res)=>{
     }
 }
 
-module.exports = {getScheduleByid,getAllSchedule,findSchedule,updateSchedule,updateManySchedules,deleteSchedule,deleteManySchedules};
+module.exports = {getSchedule,getAllSchedule,findSchedule,updateSchedule,updateManySchedules,deleteSchedule,deleteManySchedules};

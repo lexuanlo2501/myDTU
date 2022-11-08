@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
     
 const Users = new mongoose.Schema({
-    _id:{
-        type:Number,
+    uid:{
+        type:String,
         required:[true,'Người dùng phải có mã định danh']
     },
     content_type:{
@@ -50,7 +50,7 @@ const Users = new mongoose.Schema({
             },
             role:{
                 type:String,
-                default:'Sinh viên'
+                require:true
             },
             currentLivingArea:String,
              
@@ -58,5 +58,5 @@ const Users = new mongoose.Schema({
     
       
 
-module.exports = mongoose.model("Users",Users);
+module.exports = mongoose.model("User",Users);
 

@@ -21,15 +21,15 @@ if (process.env.NODE_ENV !== 'production') {
     app.use(session({
       secret: process.env.SESSION_SECRET,
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: true,
       cookie:{
-        maxAge:6000000
+        maxAge:30*60*1000
       }
     }));
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(methodOverride('_method'));
-    app.use(cors({origin:[`${CLIENT_URL}`,`${CLIENT_URL}/login`,`${CLIENT_URL}/register`],methods: "GET,POST,PUT,DELETE",credentials: true,}));
+    app.use(cors({origin:CLIENT_URL,methods: "GET,POST,PUT,DELETE",credentials: true,}));
     app.use((err,req,res,next)=>{
       if(err) return res.status(500).json({errorMesssage:err.type});
       next();

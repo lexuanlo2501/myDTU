@@ -5,7 +5,7 @@ const course_router = require('./study-info/course.router');
 const group_router = require('./study-info/courseGroup.router');
 const schedule_router = require('./study-info/schedule.router');
 Root_router.get('/',(req,res)=>{
-    res.json({message:`Chào mừng ${req.user.role} trở lại`});
+    res.status(200).json({authenticate:true,accessLevel:1});
 });
 
 Root_router.use('/',user_router);

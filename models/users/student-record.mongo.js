@@ -1,34 +1,89 @@
 const mongoose = require('mongoose');
 
 const Student_Record = new mongoose.Schema({
-    _id:{
-        type:Number,
+    student:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
         required:true
     },
-    full_name:{
+    student_id:{
         type:String,
         required:true
     },
-    passed_courses:{
-        type:[Object] 
-        /*[{
-          course:
-          credits 
-        }]}*/
-        },
-    study_record:{
-        type:[Object]
-        /**
-         * {
-         *  year:
-         * semester_I:[{course,class,credits,score}]
-         * semesster_II:[]
-         * summer_semester:[]
-        
-         * }
-         * 
-         */
-    }
+    passed_courses:[{type:mongoose.Schema.Types.ObjectId,ref:'course'}] ,
+    study_record:[
+        {
+            _id:false,
+            year:{
+                type:String,
+                require:true
+            },
+            semester_I:[
+        {
+            _id:false,    
+            class_id:{
+                type:String,
+                require:true
+            },
+            course_name: {
+                type:String,
+                require:true
+            },
+            course_id: {
+                type:String,
+                require:true
+            },
+            credits:{
+                type:Number,
+                require:true
+            }
+        }
+            ],
+            semesster_II:[
+                {
+                    _id:false,    
+                    class_id:{
+                        type:String,
+                        require:true
+                    },
+                    course_name: {
+                        type:String,
+                        require:true
+                    },
+                    course_id: {
+                        type:String,
+                        require:true
+                    },
+                    credits:{
+                        type:Number,
+                        require:true
+                    }
+                }
+            ],
+            summer_semester:[
+                {
+                    _id:false,    
+                    class_id:{
+                        type:String,
+                        require:true
+                    },
+                    course_name: {
+                        type:String,
+                        require:true
+                    },
+                    course_id: {
+                        type:String,
+                        require:true
+                    },
+                    credits:{
+                        type:Number,
+                        require:true
+                    }
+                }
+            ]
+        }
+    ] 
+    
 ,
     overall_credits:{
         type:Number,

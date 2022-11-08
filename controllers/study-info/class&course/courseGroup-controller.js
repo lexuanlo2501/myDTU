@@ -4,36 +4,42 @@ const addCourseGroup = async (req,res)=>{
     try{
         const Group = new courseGroup({...req.body});
         await Group.save();
-        return res.status(200).json({message:`Bạn đã thêm thành công mã chuyên ngành : ${Group.group_name}`});
+        return res.status(200).json({message:`Bạn đã thêm thành công mã chuyên ngành : ${Group.group_id}`});
     } catch (error){
-        return res.status(401).json({errorMessage:error});
+        return res.status(400).json({errorMessage:error});
     }
-} 
+}
 
 const  updateCourseGroup = async (req,res)=>{
     try{
-        const result = await courseGroup.findById(req.params.id);
+        const result = await courseGroup.findOne({...req.body});
         result.overwrite({...result._doc,...req.body});
         await result.save();
-        res.status(200).json({message:`Bạn đã sửa thành công mã chuyên ngành : ${result.group_name}`});
+        res.status(200).json({message:`Bạn đã sửa thành công thông tin nhóm  : ${result.group_id}`});
     } catch(error){
-        return res.status(500).json({error:error.message});
+        return res.status(400).json({
+            errorMessage:`Không thể chỉnh sửa theo nội dung yêu cầu : ${{...req.body}}`
+            ,errorLog:error.message
+        });
     }
 }
 
 const deleteCourseGroup = async (req,res)=>{
     try {
-        const {id}= req.params;
-        await courseGroup.findByIdAndRemove(id);
-        return res.status(200).json({message:`Bạn đã xóa thành công mã chuyên ngành : ${id}`});
+        
+        await courseGroup.findOneAndDelete({...req.body});
+        return res.status(200).json({message:{...req.body,status:'removed'}});
     } catch (error) {
-        return res.status(401).json({errorMessage:`Không thể xóa mã ${id}`});
+        return res.status(404).json({
+            errorMessage:`Không thể xóa nội dung : ${{...req.body}}`,
+            errorLog:error.message
+        });
     }
 }
 const getCourseGroup = async (req,res)=>{
     try{
-    const result = await courseGroup.findById(req.params.id);
-    res.status(200).json({content:result._doc});
+    const {_doc} = await courseGroup.findOne({...req.body});
+    res.status(200).json({content:_doc});
     }
     catch{
         res.status(404).json({errorMessage:`Không tìm thấy nội dung bạn cần tìm`});

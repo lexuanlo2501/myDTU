@@ -4,57 +4,59 @@ const Student_Record = require('../../models/users/student-record.mongo');
 const Student_Schedule = require('../../models/users/student.schedule');
 handleRegister = async(req,res)=>{
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        if(await Users.findOne({email:req.body.email}))   res.json({errorMessage:`Email người dùng đã tồn tại , vui lòng thử lại bằng email khác`});
-        else{
-          try{
-            console.log(req.body);
-            const User = new Users({
-              _id: req.body.Student_id,
-              full_name: req.body.name,
-              email: req.body.email,
-              password: hashedPassword,
-              gender:req.body.gender,
-              date_of_birth:req.body.date_of_birth,
-              PlaceOfBirth:req.body.PlaceOfBirth,
-              study_major:req.body.study_major
+        const {uid,full_name,email,password,gender,date_of_birth,PlaceOfBirth,role} = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        if(['Sinh viên','Giảng viên'].some(_role=>!role.includes(_role))) throw 'Không thể đăng ký';
+        if(await Users.findOne({email}) ) return res.status(400).json({errorMessage:`Email người dùng đã tồn tại , vui lòng thử lại bằng email khác`});
+        if(await Users.findOne({uid})) return res.status(400).json({errorMessage:`Mã định danh của người dùng này đã tồn tại , vui lòng thử lại bằng một mã khác`})
+        
+        const User = new Users({
+              uid,full_name,email,
+              password:hashedPassword,
+              gender, date_of_birth,PlaceOfBirth,role
+            });
+
+        if(User.role.includes('Sinh viên')){
+              User.study_major = req.body.study_major;
+              const student_record = new Student_Record({
+                _id:User._id,  
+                student:User._id,
+                student_id:User.uid,
+                full_name:User.full_name
+              });
+             
+              const user_schedule = new Student_Schedule({
+                _id:User._id,
+                student:User._id,
+                student_id:User.uid,
+                semester:"Học Kỳ I",
               
             });
-            await User.save();
-            const student_record = new Student_Record({
-              _id:User._id,full_name:User.full_name
-            });
-            await student_record.save();
-            const user_schedule = new Student_Schedule({
-              _id:User._id,
-              full_name:User.full_name,
-              semester:"Học Kỳ I",
-              
-            });
-            await  user_schedule.save();
-          } catch (error){
-            return res.status(400).json({errorMessage:error.message});
+            await  Promise.all([user_schedule.save(), student_record.save()],);
           }
+          await User.save();
+        
           res.status(200).json({message:'Bạn đã đăng ký thành công'});
-        }
+        
       } catch (error){
-        console.log(error);
-        res.status(400).json({errorMessage:`Có lỗi khi đăng ký , vui lòng thử lại : ${error.message}`});
+          console.log(error);
+          res.status(400).json({errorMessage:`Có lỗi khi đăng ký , vui lòng thử lại `, errorLog:error});
         }
     }
     const handleLogout = (req,res)=>{
       req.logOut((err)=>{
         if(err) return next(err);
-        res.status(200).json({loggedout:true});
+        res.status(200).json({signed_out:true});
     });
   }
   const userLoginSuccess = (req,res)=>{
-    if(req.user.role==='Admin') return res.redirect('/root');
-     return res.status(200).json({message:'Chào mừng bạn trở lại'});
+    if(req.user.role.includes('Admin')) return res.redirect('/root');
+    if(req.user.role.includes('Giảng viên')) return res.redirect('/teacher')
+     return res.status(200).json({authenticate:true,accessLevel:3});
   }
   const userLoginFailure =(req,res)=>{
-      let error =require('../../security/passport.config').err;
-      res.status(401).json({error});
-      error = null;
+      const error =require('../../security/passport.config').err;
+      res.status(401).json({error,authenticate:false});
+      
   }
 module.exports = {handleRegister,handleLogout,userLoginSuccess,userLoginFailure};

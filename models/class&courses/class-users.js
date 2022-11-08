@@ -1,43 +1,30 @@
 const mongoose = require('mongoose');
 const UsersInClass = mongoose.Schema({
-    _id:{
+    class:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Class'
     },
-    class_name:{
+    class_id:{
         type:String,
-        required:true
-    },
-    semester:{
-        type:String,
-        required:[true,'Học kỳ không được để trống']
+        require:true
     },
     year:{
         type:String,
-        required:[true,'Năm học không được để trống']
-    },
-    lecturer:{
-        type:[String],
-        required:[true,'Tên giảng viên không được để trống']
-    },
-    
-    Student_Number:{
-        type:Number,
-        default:0
-
-    },
-    class_status:{
-        type:String,
-        required:[true,'Trạng thái lớp học không được để trống'],
-        default:'Lớp Học Chưa Bắt Đầu'
-        
-    },
-    Students:{
-        type:[mongoose.Schema.Types.ObjectId]
+        require:true
     }
+    ,
+    semester:{
+        type:String,
+        require:true
+    }
+    ,
+    Students:[
+    {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Users'
+    }
+]
 
 });
-UsersInClass.pre('save',function(){
-    this.Student_Number = this.Students.length;
-});
-module.exports = mongoose.model('UsersInClass',UsersInClass);
+
+module.exports = mongoose.model('Users_InClass',UsersInClass);

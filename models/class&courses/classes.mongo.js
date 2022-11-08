@@ -4,35 +4,25 @@ const Class= new mongoose.Schema({
         type:String,
         default:`Thông tin lớp học`
     },
-    _id:{ 
+    class_id:{
         type:String,
-        required:[true,'Mã môn học không được để trống']
+        required:true
     },
     signUpCode:{
         type:String,
         required:[true,'Mã đăng ký lớp học không được để trống']
     }, 
-    group_name:{
+    group_id:{
         type: String,
-        ref:'course-Group',
         required:[true,'Lớp phải có mã chuyên ngành']
     },
-    course:{
-        type: String,
-        ref:'course',
+    course_name:{
+        type:String,
         required:[true,'Mã chuyên ngành  không được để trống']
     },
-    class_name:{
+    course_id:{
         type:String,
         required:true
-    },
-    class_type:{
-        type:[String],
-        required:[true,'Hình thức giảng dạy không được để trống']
-    },
-    credits:{
-        type:Number,
-        required:[true,'Số tín chỉ không được để trống']
     },
     semester:{
         type:String,
@@ -42,10 +32,17 @@ const Class= new mongoose.Schema({
         type:String,
         required:[true,'Năm học không được để trống']
     },
-    lecturer:{
-        type:[String],
-        required:[true,'Tên giảng viên không được để trống']
-    },
+    lecturer:[{
+        full_name:{
+            type:String,
+            require:true
+        },
+        uid:{
+            type:String,
+            default:null,
+            require:true
+        }
+    }],
     avaible_seats:{
         type:Number,
         min:0,
@@ -62,38 +59,73 @@ const Class= new mongoose.Schema({
         min:0,
     }
     ,
-  
+    
     available:{
         type:Boolean,
         default:true
     },
     signUpTime:{
-        type:Object,
-        default:{
-            start:'',
-            end:''
-        },
-        required:[true,'Thời gian đăng ký không được để trống']
+        
+            start:{
+                type:String,
+                require:true
+            },
+            end:{
+                type:String,
+                require:true
+            }
+        
     },
     from_to:{
-        type:Object,
-        default:{
-            starting_week:undefined,
-            ending_week:undefined,
-            starting_date:undefined,
-            ending_date:undefined
-        },
-        required:[true,'Thời gian học không được để trống']
+        
+            starting_week:{
+                type:String,
+                require:true
+            },
+            ending_week:{
+                type:String,
+                require:true
+            },
+            starting_date:{
+                type:String,
+                require:true
+            },
+            ending_date:{
+                type:String,
+                require:true
+            }
+        
     },
     
-    timeAndplace:{
-        type:[Object],
-        required:true
-    },
-    cancel_weeks:{
-        type:[Object],
-        required:true
-    },
+    timeAndplace:[
+        {
+            week_day:{
+                type:String,
+                require:true
+            },
+            time:{
+                type:String,
+                require:true
+            },
+            place:{
+                type:String,
+                require:true
+            }
+        }
+    ],
+    cancel_weeks:[
+        {
+            week_day:{
+                type:String,
+                require:true
+            },
+            abort:{
+                type:[Number],
+                require:true
+            }
+
+        }
+    ],
     class_status:{
         type:String,
         required:[true,'Trạng thái lớp học không được để trống'],
@@ -109,6 +141,44 @@ const Class= new mongoose.Schema({
         type:[String],
        
     },
+    credits:{
+        type:Number,
+        required:true
+    },
+    class_type:[String],
+    detailed_Schedule:[
+        {
+            week:{
+                type:Number,
+                require:true,
+
+            },
+            schedule:[
+                {
+                    week_day:{
+                        type:String,
+                        require:true,
+                    },
+                    time:{
+                        type:String,
+                        require:true
+                    },
+                    place:{
+                        type:String,
+                        require:true
+                    },
+                    date:{
+                        type:String,
+                        require:true
+                    },
+                    description:{
+                        type:String,
+                        default:""
+                    }
+                }
+            ]
+        }
+    ]
    
 
 });

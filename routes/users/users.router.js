@@ -8,7 +8,14 @@ const studentHandle_router = require('./student.handle.router');
 
 
 router.get('/user',checkAuthenticated,async(req,res)=>{
-   res.status(200).json({...req.user._doc, password:undefined, __v:undefined});
+   const {uid,full_name,email,gender,date_of_birth,PlaceOfBirth,role,study_major,teaching_record} = req.user._doc;
+   const User_info = {
+      uid,full_name,email,gender,date_of_birth,PlaceOfBirth
+   }
+   if(role.includes('Sinh viên')) User_info.study_major = study_major ;
+   if(role.includes('Giảng viên')) User_info.teaching_record = teaching_record;
+   
+   res.status(200).json({...User_info});
 });
 router.post('/login',checkNotAuthenticated,passport.authenticate('local',{  successRedirect: `/login/success`,failureRedirect: `/login/failure`}));
 
@@ -16,6 +23,7 @@ router.use('/login/success',userLoginSuccess);
 router.use('/login/failure',userLoginFailure);
 router.post('/register', checkNotAuthenticated, handleRegister );
 router.post('/logout',handleLogout);
-router.use('/root',isAdmin,root_router);
+router.use('/root',checkAuthenticated,isAdmin,root_router);
+//router.use()
 router.use('/',checkAuthenticated,isStudent,studentHandle_router);
 module.exports= router;

@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 
 const course = new mongoose.Schema({
-    _id:{
+    course_id:{
         type:String,
         required:[true,'Mã môn không được để trống']
     },
-    group:{
-        type:String,
-        ref:'course-Group',
-        required:true
-    },
     course_name:{
         type:String,
+        required:true
+    }
+    ,
+    group_name:{
+        type:mongoose.Schema.Types.ObjectId,
         ref:'course-Group',
-        required:[true,'Thiếu tên môn học']
+        required:true
     }
     ,
     course_credits:{

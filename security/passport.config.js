@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
-let err ;
+
 module.exports.initializePassport = async(passport, getUserByEmail, getUserById)=> {
     const authenticateUser = async (email, password, done) => {
         const user = await getUserByEmail(email);
@@ -13,9 +13,9 @@ module.exports.initializePassport = async(passport, getUserByEmail, getUserById)
   
       try {
         if (await bcrypt.compare(password, user.password)) {
-          return done(null, user)
+          return done(null,user)
         } else {
-         module.exports.err = `Mật khẩu của email ${user.email} không đúng`;
+         module.exports.err = `Mật khẩu của người dùng với email: ${user.email} không đúng`;
           return done(null, false);
         }
       } catch (e) {
