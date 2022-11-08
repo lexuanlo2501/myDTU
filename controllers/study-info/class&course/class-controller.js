@@ -117,12 +117,24 @@ const deleteManyClasses = async (req,res)=>{
 }
 
 const getClassById = async (req,res)=>{
-    const {id} = req.params;
+    const {_id} = req.params;
     try{ 
-        const result = await Class.findOne({class_id:id},{_id:0,__v:0});
+        const result = await Class.findOne({_id},{_id:0,__v:0});
         res.status(200).json({content:result._doc});
     } catch{
         return res.status(404).json({errorMessage:`Không tìm thấy nội dung yêu cầu : ${id}`});
+    }
+}
+
+const getClassesByCourse= async (req,res)=>{
+    const {group_id,course_id,course_name,semester,year} = req.body;
+    try{
+        const results = await Class.find({group_id,course_id,course_name,semester,year});
+        if (results.length === 0 ) throw `Không tìm thấy nội dung yêu cầu`
+        res.status(200).json({content:results});
+    }
+    catch(e) {
+        res.status(404).json({errorMessage:e});
     }
 }
 
@@ -146,4 +158,4 @@ const findClasses = async (req,res)=>{
 }
 
 
-module.exports = {addClass,updateClass,updateManyClasses,deleteClass,deleteManyClasses,getClassById,getAllClasses,findClasses}
+module.exports = {addClass,updateClass,updateManyClasses,deleteClass,deleteManyClasses,getClassById,getClassesByCourse,getAllClasses,findClasses}
