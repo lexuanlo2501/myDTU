@@ -2,7 +2,7 @@ const Student_Record = require('../../models/users/student-record.mongo');
 const Class = require('../../models/class&courses/classes.mongo');
 const Student_Schedule = require('../../models/users/student.schedule');
 const Users_inClass = require('../../models/class&courses/class-users') 
- 
+
  const GenerateData = (sample,Class,Starting_Date)=>{
     // hàm này chỉ chạy khi lịch học của sinh viên chưa có gì cả và sinh viên đăng ký lớp đầu tiên của mình
     const Week =['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'];

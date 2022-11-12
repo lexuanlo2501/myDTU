@@ -3,6 +3,8 @@ const Schedule_Generator = require('../schedule controller/schedule-generator');
 const UsersInClass = require('../../../models/class&courses/class-users')
 const {validateSchedule,remove_FromSchedule}  = require('../../user-class.handle/schedule.validate')
 const Student_Schedule = require('../../../models/users/student.schedule');
+const UserNotification = require('../../../models/users/user.notifications');
+const Notification = require('../../../models/users/notifications');
 
 const addClass = async (req,res)=>{
     try{
@@ -38,6 +40,7 @@ const  updateClass = async (req,res)=>{
     try{
        
         const result = await Class.findOne({class_id,year,semester});
+        console.log(result);
         const class_data = {...result._doc,...req.body};
         const class_w_users = await UsersInClass.findOne({class:result._doc._id});
         const {Students} = class_w_users._doc;
@@ -54,13 +57,23 @@ const  updateClass = async (req,res)=>{
             
             const students_chunk = Students.slice(i,i+chunk_size);
             await Promise.all(students_chunk.map(async (student_id)=>{
-               
+                const notification = new Notification({
+                    sender:req.user._id,
+                    receiver:student_id,
+                    Type:"Sửa đổi lịch học",
+                    content:`Hệ thống vừa cập nhập lại thông tin của  lớp  ${class_id} , ${semester} , ${year} . Đề nghị giảng viên & sinh viên theo dõi lại trạng thái & lịch học của môn và thông báo lại phòng đào tạo nếu có vấn đề gì xảy ra `
+                });
                 const student_schedule = await Student_Schedule.findOne({_id:student_id});
+                const u_notification = await UserNotification.findOne({_id:student_id});
+                const {Notifications} = u_notification._doc;
                 const {semester_Starting_Date,User_Schedule} = student_schedule._doc
                 const schedule_data = remove_FromSchedule(class_id,detailed_Schedule,User_Schedule);
                 const modified = validateSchedule(schedule_data,class_data,semester_Starting_Date);
-               await Student_Schedule.findByIdAndUpdate({_id:student_id},{User_Schedule:modified});
-               
+                
+                await notification.save().then(()=>Notifications.push(notification._id));
+                await Student_Schedule.findOneAndUpdate({_id:student_id},{User_Schedule:modified});
+                await UserNotification.findOneAndUpdate({_id:student_id},{Notifications});
+                
             })).catch(e=>console.log(`Có lỗi xảy ra khi cập nhập lịch học của sinh viên thứ ${i}  : ${e}`));
             }
         }

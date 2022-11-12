@@ -57,11 +57,13 @@ const Class= new mongoose.Schema({
     occupied_seats:{
         type:Number,
         min:0,
+        max:this.avaible_seats
     }
     ,
     
     available:{
         type:Boolean,
+        require:true,
         default:true
     },
     signUpTime:{
@@ -184,16 +186,6 @@ const Class= new mongoose.Schema({
 });
 
 
-Class.pre('save', function(next) {
-    console.log('activated')
-    const self = this;
-    Object.keys(this.schema.paths).forEach(function(key) {
-      if(self.schema.paths[key].options.default && self[key] === null) {
-        self[key] = self.schema.paths[key].options.default;
-      }
-    });
-    next();
-  });
 
 
 module.exports = mongoose.model("Class",Class);
