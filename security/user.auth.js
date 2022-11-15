@@ -16,7 +16,6 @@ function checkAuthenticated(req, res, next) {
     next()
   }
   function isAdmin(req,res,next){
-    
     if(req.user.role.includes('Admin')) return next();
     return res.status(403).json({errorMessage:"Bạn không được cấp quyền truy cập nội dung này"});
     
@@ -25,13 +24,13 @@ function checkAuthenticated(req, res, next) {
   function isStudent(req,res,next){
     
       if(req.user.role.includes('Sinh viên')) return next();
-      return res.status(403).json({errorMessage:"Bạn không được cấp quyền truy cập nội dung này"});
+      return res.status(403).json({errorMessage:"Bạn không phải là sinh viên nên không được cấp quyền truy cập nội dung này"});
     
   }
 
   function isTeacher(req,res,next){
     if(req.user.role.includes('Giảng viên')) return next();
-    return res.status(403).json({errorMessage:"Bạn không được cấp quyền truy cập nội dung này"});
+    return res.status(403).json({errorMessage:"Bạn không phải là giảng viên nên không được được cấp quyền truy cập nội dung này"});
     
     
   }

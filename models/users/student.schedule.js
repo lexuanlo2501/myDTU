@@ -36,49 +36,7 @@ const Student_Schedule = new mongoose.Schema({
         }
     ],
 
-    User_Schedule:[
-        {
-                week: {
-                type:Number,
-                require:true
-                },
-                week_schedule: [
-            {
-            week_day: {
-                type:String,
-                require:true
-                },
-            date: {
-            type:String,
-            require:true
-          },
-          day_schedule: [
-            {
-                _id:false,
-                class_id: {
-                    type:String,
-                    require:true
-                  },
-                class_name: {
-                    type:String,
-                    require:true
-                  },
-                time: {
-                    type:String,
-                    require:true
-                  },
-                place: {
-                    type:String,
-                    require:true
-                  },
-                description: {
-                    type:String,
-                  }
-              }
-          ]
-            }
-            ],
-        }],
+    User_Schedule:[Object],
     
 total_credits:{
     type:Number,

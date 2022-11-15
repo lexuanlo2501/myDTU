@@ -15,7 +15,7 @@ if (process.env.NODE_ENV !== 'production') {
   const router = require('./routes/users/users.router');
   const PORT=5000;
   const CLIENT_URL = process.env.CLIENT_URL;
-  
+
   process.env.UV_THREADPOOL_SIZE = os.cpus().length; 
   initializePassport(passport,email=>Users.findOne({email:email}),id => Users.findOne({_id:id}));
     app.use(express.json());
@@ -41,7 +41,8 @@ if (process.env.NODE_ENV !== 'production') {
     mongoose.connect(process.env.MONGO_URL )
     .then(()=>app.listen(PORT, async()=>{
          //console.log(await Class.find({semester:"Học Kỳ I", year:"Năm Học 2022-2023"}));
-        console.log(`Server running on PORT:${PORT}`)}))
+        //await Class.updateMany({},{available:true});
+         console.log(`Server running on PORT:${PORT}`)}))
     .catch((error)=>{
       console.log(error.message);
     });

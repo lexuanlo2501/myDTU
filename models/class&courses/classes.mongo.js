@@ -39,9 +39,10 @@ const Class= new mongoose.Schema({
         },
         uid:{
             type:String,
-            default:null,
+            default:"",
             require:true
-        }
+        },
+        _id:false
     }],
     avaible_seats:{
         type:Number,
@@ -79,7 +80,7 @@ const Class= new mongoose.Schema({
         
     },
     from_to:{
-        
+            _id:false,
             starting_week:{
                 type:String,
                 require:true
@@ -101,6 +102,7 @@ const Class= new mongoose.Schema({
     
     timeAndplace:[
         {
+            _id:false,
             week_day:{
                 type:String,
                 require:true
@@ -116,7 +118,8 @@ const Class= new mongoose.Schema({
         }
     ],
     cancel_weeks:[
-        {
+        {   
+            _id:false,
             week_day:{
                 type:String,
                 require:true
@@ -150,35 +153,13 @@ const Class= new mongoose.Schema({
     class_type:[String],
     detailed_Schedule:[
         {
+            _id:false,
             week:{
                 type:Number,
                 require:true,
 
             },
-            schedule:[
-                {
-                    week_day:{
-                        type:String,
-                        require:true,
-                    },
-                    time:{
-                        type:String,
-                        require:true
-                    },
-                    place:{
-                        type:String,
-                        require:true
-                    },
-                    date:{
-                        type:String,
-                        require:true
-                    },
-                    description:{
-                        type:String,
-                        default:""
-                    }
-                }
-            ]
+            schedule:[Object]
         }
     ]
    

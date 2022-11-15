@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const Users = require('../../models/users/users.mongo');
+const UserNotification = require('../../models/users/user.notifications'); 
+
 const resetPass = async (req,res)=>{
     const user_pwd = req.body.password;
     const newPassword = req.body.newPassword;
@@ -11,8 +13,11 @@ const resetPass = async (req,res)=>{
     Users.findByIdAndUpdate(req.user._id,{password});
     return res.status(200).json({message:`Bạn đã đặt lại mật khẩu thành công`});
     }
-}  catch{
-    return res.status(400).json({errorMessage:`Có lỗi xảy ra , vui lòng xem lại mật khẩu hoặc thông tin đăng nhập`});
+}  catch(error) {
+    return res.status(400).json({
+        errorMessage:`Có lỗi xảy ra , vui lòng xem lại mật khẩu hoặc thông tin đăng nhập`,
+        errorLog:error
+    });
 }
 }
 
@@ -28,4 +33,19 @@ const modifyPersonalInfo = async (req,res)=>{
     
 }
 
-module.exports = {resetPass,modifyPersonalInfo};
+const getNotifications = async(req,res)=>{
+    try{
+        const {Notifications}= await UserNotification.findOne({uid:req.user.uid}).populate('Notifications');
+        res.status(200).json({Notifications});
+    }
+    catch(error){
+        console.log(error);
+        res.status(404).json({
+            errorMessage : `Có lỗi khi lấy dữ liệu thông báo , vui lòng thử  lại sau`,
+            erroLog:error
+    });
+}
+
+}
+
+module.exports = {resetPass,modifyPersonalInfo,getNotifications};

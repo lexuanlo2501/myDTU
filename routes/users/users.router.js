@@ -1,11 +1,16 @@
 const express = require('express');
-const router = express.Router();
-const root_router = require('../admin/admin.router');
-const passport = require('passport');
-const {handleRegister,handleLogout,userLoginSuccess,userLoginFailure} = require('../../controllers/users/user.auth');
-const {checkAuthenticated,checkNotAuthenticated,isAdmin,isStudent} = require('../../security/user.auth');
-const studentHandle_router = require('./student.handle.router');
-
+      passport = require('passport'),
+      router = express.Router(),
+      Root_router = require('../admin/admin.router'),
+      studentHandleRouter = require('./student.handle.router'),
+      {
+         handleRegister,handleLogout,
+         userLoginSuccess,userLoginFailure
+      } = require('../../controllers/users/user.auth'),
+      {
+         checkAuthenticated,checkNotAuthenticated,
+         isAdmin,isStudent} = require('../../security/user.auth'),
+      {getNotifications} = require('../../controllers/users/user-info.controller');
 
 router.get('/user',checkAuthenticated,async(req,res)=>{
    const {uid,full_name,email,gender,date_of_birth,PlaceOfBirth,role,study_major,teaching_record} = req.user._doc;
@@ -17,13 +22,14 @@ router.get('/user',checkAuthenticated,async(req,res)=>{
    
    res.status(200).json({...User_info});
 });
-router.post('/login',checkNotAuthenticated,passport.authenticate('local',{  successRedirect: `/login/success`,failureRedirect: `/login/failure`}));
 
+router.get('/notifications',checkAuthenticated,getNotifications);
 router.use('/login/success',userLoginSuccess);
 router.use('/login/failure',userLoginFailure);
-router.post('/register', checkNotAuthenticated, handleRegister );
+router.use('/student',checkAuthenticated,isStudent,studentHandleRouter);
+router.use('/root',checkAuthenticated,isAdmin,Root_router);
+router.post('/login',checkNotAuthenticated,passport.authenticate('local',{  successRedirect: `/login/success`,failureRedirect: `/login/failure`}));
 router.post('/logout',handleLogout);
-router.use('/root',checkAuthenticated,isAdmin,root_router);
-//router.use()
-router.use('/',checkAuthenticated,isStudent,studentHandle_router);
+router.post('/register', checkNotAuthenticated, handleRegister);
+
 module.exports= router;

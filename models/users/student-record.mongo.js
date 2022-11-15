@@ -10,7 +10,7 @@ const Student_Record = new mongoose.Schema({
         type:String,
         required:true
     },
-    passed_courses:[{type:mongoose.Schema.Types.ObjectId,ref:'course'}] ,
+    passed_courses:[{type:mongoose.Schema.Types.ObjectId,ref:'Class'}] ,
     study_record:[
         {
             _id:false,

@@ -1,5 +1,5 @@
 const Class = require('../../../models/class&courses/classes.mongo')
-const Schedule_Generator = require('./schedule-generator');
+const ScheduleGenerator = require('./schedule-generator');
 const getSchedule  =async(req,res)=>{
     
     try{
@@ -11,24 +11,26 @@ const getSchedule  =async(req,res)=>{
     }
 }
 const getAllSchedule = async (req,res)=>{
-    res.status(200).json({content:await Class.find().select('detailed_schedule')});
+    res.status(200).json({
+        content:await Class.find()
+        .select('class_id course_name semester year lecturer detailed_schedule')
+    });
 }
 
 const updateSchedule = async (req,res)=>{
     const {class_id,from_to,timeAndplace,cancel_weeks,modified} = req.body;
    try{ 
-
-    const result = await Class.findOne({class_id});
+    let result = await Class.findOne({class_id});
     let {detailed_Schedule}  = result._doc
     if(!from_to||!timeAndplace||!cancel_weeks && modified.length===0){
-    for(let i = 0 ; i<detailed_Schedule.length;i++){
+        for(let i = 0 ; i<detailed_Schedule.length;i++){
         const found = modified.find(value=>value.week === detailed_Schedule[i].week);
         if(found) detailed_Schedule[i] = found ;
     }
     delete req.body.modified; 
 }
 
-    else detailed_Schedule = Schedule_Generator(from_to,timeAndplace,cancel_weeks);
+    else detailed_Schedule = ScheduleGenerator(from_to,timeAndplace,cancel_weeks);
    
 result.overwrite({...result._doc,...req.body,detailed_Schedule});
 await result.save();

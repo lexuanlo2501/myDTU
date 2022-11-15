@@ -1,13 +1,14 @@
 const Class = require('../../../models/class&courses/classes.mongo');
 const Schedule_Generator = require('../schedule controller/schedule-generator');
 const UsersInClass = require('../../../models/class&courses/class-users')
-const {validateSchedule,remove_FromSchedule}  = require('../../user-class.handle/schedule.validate')
+const {validateSchedule,RemoveFromSchedule}  = require('../../user-class.handle/schedule.validate')
 const Student_Schedule = require('../../../models/users/student.schedule');
 const UserNotification = require('../../../models/users/user.notifications');
 const Notification = require('../../../models/users/notifications');
 
 const addClass = async (req,res)=>{
-    try{
+    
+try{
         const {from_to,timeAndplace,cancel_weeks} = req.body;
         const Data = Schedule_Generator(from_to,timeAndplace,cancel_weeks);
         const newClass = new Class({
@@ -25,35 +26,36 @@ const addClass = async (req,res)=>{
         });
         await usersClass.save()
    return res.status(200).json({message:`Bạn đã thêm thành công thông tin và lịch học lớp ${newClass.class_id}`});
-    } catch (error){
-        console.log(error);
-        return res.status(400).json({
-            errorMessage:`Không thể sửa nội dung theo yêu cầu`,
-            errorLog:error.message
+    } 
+catch (error){
+    console.log(error);
+    return res.status(400).json({
+        errorMessage:`Không thể sửa nội dung theo yêu cầu`,
+        errorLog:error.message
     });
-    }
+}
+
 } 
 
 const  updateClass = async (req,res)=>{
     
-    const {class_id,semester,year,detailed_Schedule} = req.body
+    const {class_id,semester,year,detailed_Schedule} = req.body;
     try{
        
-        const result = await Class.findOne({class_id,year,semester});
-        console.log(result);
+        const result = await Class.findOne({class_id,year,semester}) || {};
         const class_data = {...result._doc,...req.body};
-        const class_w_users = await UsersInClass.findOne({class:result._doc._id});
+        const class_w_users = await UsersInClass.findOne({class:result._doc._id}) || {};
         const {Students} = class_w_users._doc;
         
-        let chunk_size ;
+        let chunk_size = 30;
         
-        if(result === {}) throw `Không tìm thấy thông tin lớp học theo yêu cầu`;
+        if(Object.keys(result).length === 0 ) throw `Không tìm thấy thông tin lớp học theo yêu cầu`;
         
-        Students.length < chunk_size ? chunk_size = Students.length : chunk_size = 30; 
-        detailed_Schedule!== undefined || null ? result._doc.detailed_Schedule = detailed_Schedule : result._doc.detailed_Schedule;
+        Students.length < chunk_size ? chunk_size = Students.length : chunk_size ; 
+        detailed_Schedule ? result._doc.detailed_Schedule = detailed_Schedule : result._doc.detailed_Schedule;
         
         if( Students.length!== 0){
-        for(let i = 0 ; i<Students.length;i+= chunk_size){
+        for(let i = 0 ; i<Students.length ;i+= chunk_size){
             
             const students_chunk = Students.slice(i,i+chunk_size);
             await Promise.all(students_chunk.map(async (student_id)=>{
@@ -63,21 +65,23 @@ const  updateClass = async (req,res)=>{
                     Type:"Sửa đổi lịch học",
                     content:`Hệ thống vừa cập nhập lại thông tin của  lớp  ${class_id} , ${semester} , ${year} . Đề nghị giảng viên & sinh viên theo dõi lại trạng thái & lịch học của môn và thông báo lại phòng đào tạo nếu có vấn đề gì xảy ra `
                 });
+                
                 const student_schedule = await Student_Schedule.findOne({_id:student_id});
                 const u_notification = await UserNotification.findOne({_id:student_id});
                 const {Notifications} = u_notification._doc;
                 const {semester_Starting_Date,User_Schedule} = student_schedule._doc
-                const schedule_data = remove_FromSchedule(class_id,detailed_Schedule,User_Schedule);
+                const schedule_data = RemoveFromSchedule(class_id,detailed_Schedule,User_Schedule);
                 const modified = validateSchedule(schedule_data,class_data,semester_Starting_Date);
                 
                 await notification.save().then(()=>Notifications.push(notification._id));
                 await Student_Schedule.findOneAndUpdate({_id:student_id},{User_Schedule:modified});
                 await UserNotification.findOneAndUpdate({_id:student_id},{Notifications});
                 
-            })).catch(e=>console.log(`Có lỗi xảy ra khi cập nhập lịch học của sinh viên thứ ${i}  : ${e}`));
-            }
-        }
-            await Class.findOneAndUpdate({class_id,year,semester},{...class_data});
+        }))
+            .catch(e=>console.log(`Có lỗi xảy ra khi cập nhập lịch học của sinh viên thứ ${i}  : ${e}`));
+    }
+}
+        await Class.findOneAndUpdate({class_id,year,semester},{...class_data});
         res.status(200).json({message:`Bạn đã sửa thành công thông tin lớp : ${result.class_id} và lịch học của ${Students.length} sinh viên`,
     });
     } catch(error){

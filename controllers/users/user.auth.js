@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const Users = require('../../models/users/users.mongo');
 const Student_Record = require('../../models/users/student-record.mongo');
 const Student_Schedule = require('../../models/users/student.schedule');
+const UserNotification = require('../../models/users/user.notifications');
 handleRegister = async(req,res)=>{
     try {
         const {uid,full_name,email,password,gender,date_of_birth,PlaceOfBirth,role} = req.body;
@@ -15,7 +16,12 @@ handleRegister = async(req,res)=>{
               password:hashedPassword,
               gender, date_of_birth,PlaceOfBirth,role
             });
-
+        
+            const userNotification = new  UserNotification(
+              {
+                _id:User._id,
+                uid:User.uid
+              }); 
         if(User.role.includes('Sinh viên')){
               User.study_major = req.body.study_major;
               const student_record = new Student_Record({
@@ -34,7 +40,7 @@ handleRegister = async(req,res)=>{
             });
             await  Promise.all([user_schedule.save(), student_record.save()],);
           }
-          await User.save();
+          await Promise.all([User.save(),userNotification.save()]);
         
           res.status(200).json({message:'Bạn đã đăng ký thành công'});
         
@@ -50,9 +56,10 @@ handleRegister = async(req,res)=>{
     });
   }
   const userLoginSuccess = (req,res)=>{
+  
     if(req.user.role.includes('Admin')) return res.redirect('/root');
     if(req.user.role.includes('Giảng viên')) return res.redirect('/teacher')
-     return res.status(200).json({authenticate:true,accessLevel:3});
+    return res.redirect('/student'); 
   }
   const userLoginFailure =(req,res)=>{
       const error =require('../../security/passport.config').err;

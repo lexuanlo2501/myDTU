@@ -1,4 +1,4 @@
-const {Class_Subscribe , Class_Remove,} = require('./schedule.validate');
+const {ClassSubscribe , UnsubcribeClass} = require('./schedule.validate');
 const Student_Schedule = require('../../models/users/student.schedule');
 
 
@@ -8,13 +8,13 @@ const registerClass = async (req,res)=>{
     const {uid,_id} = req.user;
     
     try{
-        const {message}  = await Class_Subscribe(signUpCode,uid,_id);
+        const {message}  = await ClassSubscribe(signUpCode,uid,_id);
         res.status(200).json({message:`Bạn ${message}`});
 }
     catch(error)
     {
         console.log(error);
-        res.status(400).json({errorMessage:`Không thể đăng ký lớp theo yêu cầu vui lòng xem lại thông tin đăng ký : ${error}`});
+        res.status(400).json({errorMessage:`Không thể đăng ký lớp theo yêu cầu vui lòng xem lại thông tin đăng ký !`,errorLog:error});
     }
 }
 
@@ -25,7 +25,7 @@ const registerClasses = async (req,res)=>{
     const failure = [];
     for(let code of signUpCodeList){
     try{
-        const {message}  =  await Class_Subscribe(code,uid);
+        const {message}  =  await ClassSubscribe(code,uid);
       
         success.push({ signUpCode: code ,message});
     }
@@ -48,25 +48,27 @@ const removeClass = async (req,res)=>{
     const {class_id} = req.body;
     const {uid,_id} = req.user;
     try{
-        await Class_Remove(class_id,uid,_id);
+      await UnsubcribeClass(class_id,uid,_id);
         res.status(200).json({message:`Bạn đã hủy đăng ký thành công lớp : ${class_id}`});
     }
     catch(error){
         console.log(error);
-        res.status(400).json({errorMessage:`Không thể hủy đăng ký lớp ${class_id} , vui lòng xem lại tên lớp`,
-                            errorLog:error
-                            });
+        res.status(400).json(
+        {
+            errorMessage:`Không thể hủy đăng ký lớp ${class_id} , vui lòng xem lại tên lớp`,
+            errorLog:error
+        });
     }
 }
 
 const removeClasses = async (req,res)=>{
-    const {removeList} = req.body;
+    /*const {removeList} = req.body;
     const {uid} = req.user;
     const success = [];
     const failure = [];
     for(let name of removeList){
     try{
-        const message  =  await Class_Remove(name,uid);
+        const message  =  await UnsubcribeClass(name,uid);
       
         success.push({ class: name ,message});
     }
@@ -76,6 +78,7 @@ const removeClasses = async (req,res)=>{
     }
 }
     res.status(200).json({message: `Kết quả thực hiện hủy đăng ký các lớp  theo các lớp được yêu cầu hủy : ${removeList.toString()}`, info: {success,failure} });
+*/
 }
 
 
