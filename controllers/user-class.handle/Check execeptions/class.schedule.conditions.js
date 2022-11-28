@@ -4,6 +4,7 @@ module.exports = {
     //*Kiểm tra lịch học ngày hôm đó có trống không 
     
     IsEmptyDate: (WeekSchedule,week,WeekDays,index)=> {
+        
         return WeekSchedule && 
         WeekSchedule.week === week  && 
         WeekSchedule.schedule.find(data=> 
@@ -40,10 +41,12 @@ module.exports = {
     
     //*Hàm kiểm tra xem sinh viên đó có đăng ký cùng một môn trong học kỳ này không 
     
-    checkDuplicateCourse : async (user_schedule,Class_Data)=>{
-        if(user_schedule._doc.class_registered.length=== 0)  return false;
-        const {class_registered} = await user_schedule.populate('class_registered','course_name -_id');
-        const {course_name,semester,year} = Class_Data;
+    checkDuplicateCourse : (user_schedule,Class_Data)=>{
+        if(user_schedule.class_registered.length=== 0)  return false;
+        const 
+            {class_registered} = user_schedule,
+            {course_name,semester,year} = Class_Data;
+        
         return class_registered.length!==0 && 
         user_schedule.year.includes(year) && 
         user_schedule.semester.includes(semester) && 
@@ -53,16 +56,16 @@ module.exports = {
     
     //* Hàm kiểm tra môn tiên quyết 
     
-    checkPrerequisite : async(course_list,Record)=>{
-        const {passed_courses} = await Record.populate('passed_courses','course_id course_name');
-    
+    checkPrerequisite : (course_list,Record)=>{
+        const {passed_courses} = Record;
         if(passed_courses.length === 0 ) return false ;
-        
         for(let course of course_list){
-        
             let [course_id,course_name] = course.split('-');
             course_id = course_id.trim();
-            course_name = course_name.replace(/\w\S*/g,(txt)=>txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()).trim();
+            course_name = course_name.replace(/\w\S*/g,(txt)=>
+            txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
+            .trim();
+            
             if(passed_courses.find(classData=> 
                 classData.course_id.includes(course_id) || 
                 classData.course_name.includes(course_name) 

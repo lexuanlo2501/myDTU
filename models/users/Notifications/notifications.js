@@ -30,9 +30,9 @@ const notifications = new mongoose.Schema({
         default:false
     },
     createdAt:{
-        type:Date,
+        type:String,
         require:true,
-        default: Date()
+        default: new Date().toLocaleString()
     }
         
 });

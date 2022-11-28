@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const Users = require('../../models/users/users.mongo');
-const UserNotification = require('../../models/users/user.notifications'); 
+const UserNotification = require('../../models/users/Notifications/user.notifications'); 
 
 const resetPass = async (req,res)=>{
     const user_pwd = req.body.password;

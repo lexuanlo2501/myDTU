@@ -1,60 +1,54 @@
-const bcrypt = require('bcrypt');
-const Users = require('../../models/users/users.mongo');
-const Student_Record = require('../../models/users/student-record.mongo');
-const Student_Schedule = require('../../models/users/student.schedule');
-const UserNotification = require('../../models/users/user.notifications');
-handleRegister = async(req,res)=>{
-    try {
-        const {uid,full_name,email,password,gender,date_of_birth,PlaceOfBirth,role} = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        if(['Sinh viên','Giảng viên'].some(_role=>!role.includes(_role))) throw 'Không thể đăng ký';
-        if(await Users.findOne({email}) ) return res.status(400).json({errorMessage:`Email người dùng đã tồn tại , vui lòng thử lại bằng email khác`});
-        if(await Users.findOne({uid})) return res.status(400).json({errorMessage:`Mã định danh của người dùng này đã tồn tại , vui lòng thử lại bằng một mã khác`})
+const 
+    Users = require('../../models/users/users.mongo'),
+    bcrypt = require('bcrypt'),
+    RegisterLecturer = require('./register lecturer/lecturer.register'),
+    RegisterStudent = require('./register student/student.register'),
+    {IsRegisterable ,UserInfoExist,IsStudent,IsLecturer} = require('./register validate/register.validate');
+
+const handleRegister = async(req,res)=>{
+  try{
+  const 
+    UserData = req.body,
+    { uid,full_name,email,password,gender, date_of_birth,PlaceOfBirth,role } = UserData,
+      user = new Users({uid,full_name,email,password : await bcrypt.hash(password, 10),gender , date_of_birth , PlaceOfBirth , role }),
+      {emailFound="", uidFound=""} =  await UserInfoExist({email,uid});
+      switch(true){
+        case(email.length ===0 || uid.length === 0 || password.length === 0 ):
+          throw `Không thể đăng ký , thông tin sai định dạng`;
+
+        case(!IsRegisterable(role)):
+          throw `Không thể đăng ký với chức vụ hiện tại : ${role}`;
         
-        const User = new Users({
-              uid,full_name,email,
-              password:hashedPassword,
-              gender, date_of_birth,PlaceOfBirth,role
-            });
+        case (emailFound.includes(email)):
+          throw  `Email đã tồn tại , vui lòng thử lại bằng email khác`  ;
         
-            const userNotification = new  UserNotification(
-              {
-                _id:User._id,
-                uid:User.uid
-              }); 
-        if(User.role.includes('Sinh viên')){
-              User.study_major = req.body.study_major;
-              const student_record = new Student_Record({
-                _id:User._id,  
-                student:User._id,
-                student_id:User.uid,
-                full_name:User.full_name
-              });
-             
-              const user_schedule = new Student_Schedule({
-                _id:User._id,
-                student:User._id,
-                student_id:User.uid,
-                semester:"Học Kỳ I",
-              
-            });
-            await  Promise.all([user_schedule.save(), student_record.save()],);
-          }
-          await Promise.all([User.save(),userNotification.save()]);
+        case(uidFound.includes(uid)):
+          throw `Mã định danh đã tồn tại , vui lòng thử lại bằng một mã khác`;
+      
+        case( IsStudent(role) ):
+          await RegisterStudent(UserData,user);
+        break;
         
-          res.status(200).json({message:'Bạn đã đăng ký thành công'});
-        
-      } catch (error){
-          console.log(error);
-          res.status(400).json({errorMessage:`Có lỗi khi đăng ký , vui lòng thử lại `, errorLog:error});
-        }
+        case( IsLecturer(role) ):
+          await RegisterLecturer(UserData,user);
+        break;
     }
-    const handleLogout = (req,res)=>{
-      req.logOut((err)=>{
-        if(err) return next(err);
-        res.status(200).json({signed_out:true});
-    });
+    res.status(200).json({message:`Đã đăng ký thành công thông tin đăng nhập cho ${req.body.role} : ${req.body.full_name} với mã định danh : ${req.body.uid}`});
   }
+  catch(e){
+    console.log(e);
+    res.status(400).json({
+      errorMessage:`Đã có lỗi xảy ra trong quá trình đăng ký tài khoản vui lòng xem lại thông tin đăng ký và thử lại sau`,
+      errorLog:e
+  });
+  }    
+}
+const handleLogout = (req,res)=>{
+    req.logOut((err)=>{
+    if(err) return next(err);
+    res.status(200).json({signed_out:true});
+});
+}
   const userLoginSuccess = (req,res)=>{
   
     if(req.user.role.includes('Admin')) return res.redirect('/root');
@@ -63,7 +57,7 @@ handleRegister = async(req,res)=>{
   }
   const userLoginFailure =(req,res)=>{
       const error =require('../../security/passport.config').err;
-      res.status(401).json({error,authenticate:false});
+      res.status(401).json({errorMessage:error,authenticate:false});
       
   }
 module.exports = {handleRegister,handleLogout,userLoginSuccess,userLoginFailure};

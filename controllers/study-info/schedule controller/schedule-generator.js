@@ -1,10 +1,11 @@
-const Week =[
+const WeekDays =[
     'Chủ nhật','Thứ hai','Thứ ba',
     'Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'
 ]; 
 
-const isMatchingDay = (data,Week,date)=>{
-    return date.getDay()!== Week.indexOf(data.week_day) ? 
+const isMatchingDay = (data,WeekDays,date)=>{
+    
+    return date.getDay()=== WeekDays.indexOf(data.week_day) ? 
     true : false ;
 }
 
@@ -13,14 +14,14 @@ const isEmptyDaySchedule = (cancelDate,cancel_weeks,week)=>{
     true : false ; 
 }
 
-const generateDate = (data,starting_date,start_day,Week,i)=>{
-    const weekIndex =  Week.indexOf(data.week_day);
+const generateDate = (data,starting_date,start_day,WeekDays,i)=>{
+    const weekIndex =  WeekDays.indexOf(data.week_day);
     const  index = weekIndex === 0 ? 
     index = 7 : weekIndex ;
     starting_date.setDate(
     starting_date.getDate() + 7*i + Math.abs(index- start_day)
     );
-    if(!isMatchingDay(data,Week,starting_date)) throw 'Thứ ngày trong thông tin lớp không khớp nhau nên không thể tạo lịch';
+    if(!isMatchingDay(data,WeekDays,starting_date)) throw 'Thứ ngày trong thông tin lớp không khớp nhau nên không thể tạo lịch';
     return {
     ...data, date:starting_date.toLocaleDateString("en-AU") 
     }
@@ -45,7 +46,7 @@ const ScheduleGenerator = (from_to,timeAndplace,cancel_weeks)=>{
                     cancelDate = cancel_weeks.find(value=>value.week_day === data.week_day);
                     emptyDay = isEmptyDaySchedule(cancelDate,cancel_weeks,week);
             if(emptyDay) return ; 
-            return  generateDate(data,starting_date,start_day,Week,i);
+            return  generateDate(data,starting_date,start_day,WeekDays,i);
         
             }).filter(data=>data)
         });

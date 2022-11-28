@@ -82,11 +82,11 @@ const Class= new mongoose.Schema({
     from_to:{
             _id:false,
             starting_week:{
-                type:String,
+                type:Number,
                 require:true
             },
             ending_week:{
-                type:String,
+                type:Number,
                 require:true
             },
             starting_date:{

@@ -1,14 +1,16 @@
-const {ClassSubscribe , UnsubcribeClass} = require('./schedule.validate');
-const Student_Schedule = require('../../models/users/student.schedule');
+const
+    ClassSubscribe = require('./Subscribe Class/class.subscribe');
+    UnsubscribeClass = require('./Unsubscribe class/class.unsubscribe');
 
 
 
 const registerClass = async (req,res)=>{
-    const {signUpCode} = req.body;
-    const {uid,_id} = req.user;
+    const 
+        {signUpCode} = req.body,
+        {_id} = req.user;
     
     try{
-        const {message}  = await ClassSubscribe(signUpCode,uid,_id);
+        const {message}  = await ClassSubscribe(signUpCode,_id);
         res.status(200).json({message:`Bạn ${message}`});
 }
     catch(error)
@@ -18,70 +20,30 @@ const registerClass = async (req,res)=>{
     }
 }
 
-const registerClasses = async (req,res)=>{
-    const {signUpCodeList} = req.body;
-    const {uid} = req.user;
-    const success = [];
-    const failure = [];
-    for(let code of signUpCodeList){
-    try{
-        const {message}  =  await ClassSubscribe(code,uid);
-      
-        success.push({ signUpCode: code ,message});
-    }
-    catch(error)
-    {
-        failure.push({signUpCode: code , message:error});
-    }
-}
-    res.status(200).json({message: `Kết quả thực hiện đăng ký các lớp  theo các mã đăng ký : ${signUpCodeList.toString()}`, info: {success,failure} });
-}
 
-const getUserSchedule = async(req,res)=>{
-    const {uid} = req.user
-    const user_schedule = await Student_Schedule.findById(uid);
-   
-    res.status(200).json({content:user_schedule._doc});
-}
+
+
 
 const removeClass = async (req,res)=>{
-    const {class_id} = req.body;
-    const {uid,_id} = req.user;
+    const 
+        {_id} = req.user, 
+        {class_id} = req.body;
     try{
-      await UnsubcribeClass(class_id,uid,_id);
+    
+        await UnsubscribeClass(class_id,_id);
         res.status(200).json({message:`Bạn đã hủy đăng ký thành công lớp : ${class_id}`});
     }
     catch(error){
         console.log(error);
         res.status(400).json(
         {
-            errorMessage:`Không thể hủy đăng ký lớp ${class_id} , vui lòng xem lại tên lớp`,
+            errorMessage:`Không thể hủy đăng ký lớp ${class_id} , vui lòng xem lại thông tin lớp hoặc thử lại sau`,
             errorLog:error
         });
     }
 }
 
-const removeClasses = async (req,res)=>{
-    /*const {removeList} = req.body;
-    const {uid} = req.user;
-    const success = [];
-    const failure = [];
-    for(let name of removeList){
-    try{
-        const message  =  await UnsubcribeClass(name,uid);
-      
-        success.push({ class: name ,message});
-    }
-    catch(error)
-    {
-        failure.push({signUpCode: code , message:error});
-    }
-}
-    res.status(200).json({message: `Kết quả thực hiện hủy đăng ký các lớp  theo các lớp được yêu cầu hủy : ${removeList.toString()}`, info: {success,failure} });
-*/
-}
 
-
-module.exports = {registerClass,registerClasses,getUserSchedule,removeClass,removeClasses};
+module.exports = {registerClass,removeClass};
 
 

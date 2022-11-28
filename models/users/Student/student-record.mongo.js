@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Student_Record = new mongoose.Schema({
+const StudentRecord = new mongoose.Schema({
     student:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
@@ -97,10 +97,10 @@ const Student_Record = new mongoose.Schema({
     }
 });
 
-Student_Record.pre('save',function(){
+StudentRecord.pre('save',function(){
     if(this.passed_courses.length!==0){
         this.total_credits = this.passed_courses.reduce((prev,next)=>prev.credits+next.credits);
     }
 });
 
-module.exports = mongoose.model('Student_Record',Student_Record);
+module.exports = mongoose.model('Student_Record',StudentRecord);

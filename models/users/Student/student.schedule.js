@@ -16,16 +16,16 @@ const Student_Schedule = new mongoose.Schema({
     year:{
         type:String,
         require:true,
-        default:'Năm Học 2022-2023'
+        default:`Năm Học ${new Date().getFullYear()}-${new Date().getFullYear()+1}`
     },
     semester_Starting_Date:{
         type:String,
-        default:'08/22/2022',
+        default:`08/22/${new Date().getFullYear()}`,
         required:true
     },
     semester_Ending_Date:{
         type:String,
-        default:'12/25/2022',
+        default:`12/25/${new Date().getFullYear()}`,
         required:true
     }
     ,

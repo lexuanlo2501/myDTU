@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const Class = require('../../models/class&courses/classes.mongo');
-const notifications = require('../../models/users/notifications');
-const UserNotitfication = require('../../models/users/user.notifications');
+const notifications = require('../../models/users/Notifications/notifications');
+const UserNotitfication = require('../../models/users/Notifications/user.notifications');
 const scheduleClass = async (req,res)=>{
     const {semester,year,open_time,close_time,executionType} = req.body;
     try{

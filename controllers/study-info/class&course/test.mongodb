@@ -1,0 +1,8 @@
+use('test')
+
+//db.notifications.deleteMany({})
+//db.usernotifications.updateMany({},{"$set":{"Notifications":[]}})
+
+//db.classes.find({"lecturer.full_name":"Nguyễn Thị Đoan Trang"})
+
+db.curiculums.renameCollection("curriculums")
