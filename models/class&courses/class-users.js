@@ -21,7 +21,7 @@ const UsersInClass = mongoose.Schema({
     Students:[
     {
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Users'
+        ref:'User'
     }
 ]
 

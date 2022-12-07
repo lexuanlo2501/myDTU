@@ -4,23 +4,34 @@ const
     UserNotification = require('../../../models/users/Notifications/user.notifications');
 
 const RegisterLecturer = async (LecturerData,newLecturer)=>{
+    console.log(LecturerData.uid);
     const 
         {uid,degree,department,Academic_Section,lecturing_form,subjects=[]} = LecturerData,
-        {_id} = newLecturer,
+        lecSchedule = await lecturerSchedule.findOne({lecturer_id:uid}).lean() || {},
         lecturer = new Lecturer({
-            _id,lecturer_id:uid,
-            degree,department,
-            Academic_Section,
-            lecturing_form,subjects
-        }),
-        schedule = new lecturerSchedule({_id,lecturer_id:uid,}),
-        notification = new UserNotification({_id,uid});
+            lecturer_id:uid,degree,department,
+            Academic_Section,lecturing_form,subjects
+        });
+        
+    if(!lecSchedule._id){
+        
+    const
+        schedule = new lecturerSchedule({_id:newLecturer._id,lecturer_id:uid,}),
+        notification = new UserNotification({_id:newLecturer._id,uid});
     await Promise.all([
-        lecturer.save(),
-        newLecturer.save(),
         schedule.save(), 
         notification.save()
     ]);
+}
+    else{
+        lecturer._id = lecSchedule._id ;
+        newLecturer._id = lecSchedule._id ;
+    }
+    await Promise.all([
+        lecturer.save(),
+        newLecturer.save()
+    ]);
+
 }
 
 module.exports = RegisterLecturer;

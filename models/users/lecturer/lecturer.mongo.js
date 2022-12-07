@@ -21,7 +21,13 @@ const
             type:String,
             require:true
         },
-        subjects:[Object]
+        subjects:[Object],
+        vocational_classes:[
+            {
+                type:mongoose.Schema.Types.ObjectId,
+                require:true
+            }
+        ]
 
     });
 

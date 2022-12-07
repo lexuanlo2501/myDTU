@@ -50,9 +50,10 @@ const handleLogout = (req,res)=>{
 });
 }
   const userLoginSuccess = (req,res)=>{
-  
+   
+   
     if(req.user.role.includes('Admin')) return res.redirect('/root');
-    if(req.user.role.includes('Giảng viên')) return res.redirect('/teacher')
+    if(req.user.role.includes('Giảng viên')) return res.redirect('/lecturer');
     return res.redirect('/student'); 
   }
   const userLoginFailure =(req,res)=>{

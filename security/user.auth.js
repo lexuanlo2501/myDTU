@@ -10,7 +10,7 @@ function checkAuthenticated(req, res, next) {
     
     if (req.isAuthenticated()) {
       
-      return res.status(200).redirect(`/`);
+      return res.status(200);
     }
     
     next()
@@ -22,7 +22,7 @@ function checkAuthenticated(req, res, next) {
   }
 
   function isStudent(req,res,next){
-    
+      
       if(req.user.role.includes('Sinh viên')) return next();
       return res.status(403).json({errorMessage:"Bạn không phải là sinh viên nên không được cấp quyền truy cập nội dung này"});
     

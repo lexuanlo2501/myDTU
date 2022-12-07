@@ -2,22 +2,32 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
   }
   //const Class = require('./models/class&courses/classes.mongo');
-  const Users = require('./models/users/users.mongo');
-  const os = require('os');
-  const express = require('express');
-  const app = express();
-  const session = require('express-session')
-  const methodOverride = require('method-override')
-  const mongoose = require('mongoose');
-  const cors = require('cors');
-  const passport = require('passport');
-  const initializePassport = require('./security/passport.config').initializePassport;
-  const router = require('./routes/users/users.router');
-  const PORT=5000;
-  const CLIENT_URL = process.env.CLIENT_URL;
+  const 
+    Users = require('./models/users/users.mongo'),
+    os = require('os'),
+    express = require('express'),
+    app = express(),
+    session = require('express-session'),
+    methodOverride = require('method-override'),
+    mongoose = require('mongoose'),
+    cors = require('cors'),
+    passport = require('passport'),
+    initializePassport = require('./security/passport.config').initializePassport,
+    router = require('./routes/users/users.router'),
+    PORT=process.env.PORT || 5000,
+    server = require('http').createServer(app),
+    {Server} = require('socket.io'),
+    io = new Server(server),
+    CLIENT_URL = process.env.CLIENT_URL;
 
   process.env.UV_THREADPOOL_SIZE = os.cpus().length; 
   initializePassport(passport,email=>Users.findOne({email:email}),id => Users.findOne({_id:id}));
+  io.on('connection',(socket)=>{
+    console.log('A user connected');
+    const message = require('./routes/users/users.router');
+    socket.emit('acknowledged','hello');
+    
+  })
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(session({
@@ -36,13 +46,20 @@ if (process.env.NODE_ENV !== 'production') {
       if(err) return res.status(500).json({errorMesssage:err.type});
       next();
     });
+    app.use((req,res,next)=>{
+      res.io = io;
+      next();
+    });
+    app.use(express.static(__dirname + '/public'));
     app.use('/',router);
     
     mongoose.connect(process.env.MONGO_URL )
-    .then(()=>app.listen(PORT, async()=>{
-         //console.log(await Class.find({semester:"Học Kỳ I", year:"Năm Học 2022-2023"}));
-        //await Class.updateMany({},{available:true});
-         console.log(`Server running on PORT:${PORT}`)}))
+    .then(()=>server.listen(PORT, async()=>{
+      
+      console.log(`Server running on PORT:${PORT}`);
+      app.set('io',io);
+      
+    }))
     .catch((error)=>{
       console.log(error.message);
     });
