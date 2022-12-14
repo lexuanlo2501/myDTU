@@ -1,0 +1,12 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    // background-color: antiquewhite;
+    width: var(--default-layout-width);
+    margin-top: 20px;
+    border: 1px solid rgb(199, 199, 199);
+}

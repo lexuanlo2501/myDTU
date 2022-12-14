@@ -1,0 +1,50 @@
+[
+"EVR 100 - Khoa Học Môi Trường",
+"EVR 101 - Đại Cương Công Nghệ Môi Trường",
+"EVR 103 - Môi Trường &amp; Phát Triển",
+"EVR 205 - Sức Khỏe Môi Trường",
+"EVR 248 - Thực Tập Nhận Thức",
+"EVR 296 - Đồ Án CDIO",
+"EVR 348 - Thực Tập Tốt Nghiệp",
+"EVR 349 - Thi Tốt Nghiệp",
+"EVR 350 - ISO 14000 &amp; Kiểm Toán Môi Trường",
+"EVR 353 - Sức Khỏe &amp; Môi Trường trong Y Tế",
+"EVR 354 - Quan Trắc &amp; Khảo Sát Môi Trường",
+"EVR 355 - Phân Tích bằng Công Cụ",
+"EVR 396 - Đồ Án CDIO",
+"EVR 404 - Quản Lý Môi Trường Nông Nghiệp &amp; Nông Thôn",
+"EVR 405 - Quản Lý Môi Trường Đô Thị &amp; Công Nghiệp ",
+"EVR 406 - Quản Lý Tài Nguyên Đất",
+"EVR 407 - Quản Lý Tài Nguyên Nước",
+"EVR 408 - Biến Đổi Khí Hậu &amp; Phát Triển Bền Vững",
+"EVR 413 - Quản Lý Tài Nguyên Khoáng Sản",
+"EVR 414 - Kỹ Thuật Kiểm Soát Ô Nhiễm Môi Trường Đất",
+"EVR 415 - Quản Lý Tài Nguyên Rừng",
+"EVR 427 - Quản Lý Tổng Hợp Đới Bờ",
+"EVR 434 - Kỹ Thuật Kiểm Soát Ô Nhiễm Không Khí, Tiếng Ồn &amp; Phóng Xạ",
+"EVR 447 - Đồ Án Tốt Nghiệp",
+"EVR 448 - Thực Tập Tốt Nghiệp",
+"EVR 449 - Khóa Luận Tốt Nghiệp",
+"EVR 450 - Đánh Giá Tác Động Môi Trường &amp; Rủi Ro",
+"EVR 453 - Đánh Giá Tác Động của Môi Trường lên Sức Khỏe Con Người",
+"EVR 454 - Quy Hoạch Môi Trường",
+"EVR 455 - Mô Hình Hóa Môi Trường",
+"EVR 456 - Quản Lý Môi Trường &amp; Tài Nguyên",
+"EVR 457 - Quản Lý Môi Trường Biển",
+"EVR 496 - Đồ Án CDIO",
+"EVR 497 - Đồ Án Tốt Nghiệp",
+"EVR 499 - Khóa Luận Tốt Nghiệp"
+]
+
+
+Array.from($$("input")).map(i => {if(i.id!== '') return i.id})
+ 
+
+ 1 2 3 4 5 6 7 8
+
+  2 9 10 11 12 13 14 15 16 17 18
+
+  {
+    "email": "nguyenthanhhungso@gmail.com",
+    "password": "Test123.cpp"
+}

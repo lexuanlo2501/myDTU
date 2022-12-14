@@ -1,0 +1,33 @@
+.wrapper {
+    width: 223px;
+    background-color: rgb(205, 205, 205);
+    font-size: 14px !important;
+}
+
+.header-nav {
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+
+.accordion-header-cs {
+    font-size: 13px;
+    font-weight: 550;
+}
+
+.accordion-body-cs{
+    padding: 0;
+
+    li {
+        padding: 7px 10px 8px 10px;
+        background-color: rgb(138, 135, 135);
+        border-bottom: 1px solid rgb(210, 206, 206);
+
+        a {
+            display: inline-block;
+            width: 100%;
+            color: #fff;
+            font-size: 12px;
+        }
+    }
+}

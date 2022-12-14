@@ -1,0 +1,72 @@
+.wrapper  {
+    background-color: #94070d;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login {
+    width: 900px;
+    min-height: 225px;
+
+    .logo {
+        background: url(https://mydtu.duytan.edu.vn/MasterPages/images/all-images-on-signin-page.png) 0 -191px no-repeat;
+        height: 60px;
+        width: 250px;
+    }
+
+    
+}
+
+.main {
+    width: 900px;
+    min-height: 225px;
+    background-color: #fff;
+    border-radius: 10px;
+
+    padding: 5px;
+
+    
+
+}
+
+.main__infor {
+    position: relative;
+    background-color: #6a040a;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+
+    .option {
+        min-width: 470px;
+        display: flex;
+        flex-wrap: wrap;
+        max-height: 95px;
+        margin-top: 60px;
+        margin-left: 20px;
+        z-index: 10;
+    }
+}
+
+.overlay {
+    position: absolute;
+    background-color: rgba(51, 51, 51, 0.561);
+    height: 157px;
+    width: 925px;
+    top: 40px;
+    left: -30px;
+}
+
+
+.Copyright {
+    margin-top: 5px;
+}
+
+.form {
+    width: 100%;
+    z-index: 10;
+
+}
+

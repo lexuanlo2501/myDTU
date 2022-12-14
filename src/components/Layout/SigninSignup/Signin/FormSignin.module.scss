@@ -1,0 +1,158 @@
+
+.wrapper {
+    background-color: rgb(255, 255, 255);
+    padding: 10px 20px;
+    border-radius: 10px;
+
+    h2 {
+        margin-bottom: 20px;
+    }
+}
+
+.wrapper-custom {
+    width: 100%;
+}
+
+.form-input {
+    position: relative;
+    label {
+        display: inline-block;
+        font-size: 17px;
+        position: absolute;
+        background-color: #fff;
+        top: -15px;
+        left: 21px;
+        padding: 0 5px;
+    }
+    input {
+        font-size: 15px;
+        width: 340px;
+        border: 2px solid #333;
+        padding: 8px 15px;
+        border-radius: 999px;
+
+        &:focus {
+            border-color: rgb(244, 95, 107);
+        }
+    }
+
+    &+& {
+        margin-top: 32px;
+    }
+
+    
+}
+
+
+.btn-main {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 20px;
+    color: #fff;
+    background-color: rgb(220, 103, 103);
+    padding: 7px 0;
+    width: 340px;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0px 3px #454545;
+
+    &:active {
+        box-shadow: 0px 1px #454545;
+        transform: translateY(2px);
+    }
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    background-color: rgb(135, 135, 135);
+}
+
+.message-error {
+    height: 26px;
+    font-size: 14px;
+    color:rgb(241, 77, 65);
+    margin-left: 97px;
+    margin-top: 20px;
+
+}
+
+.btn-sub {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 17px;
+    background-color: transparent;
+    font-weight: 700;
+    color: #333;
+    border-bottom: 3px solid rgb(238, 105, 105);
+    cursor: pointer;
+}
+
+
+// SIGN UP
+
+.wrapper-signup {
+    position: relative;
+    h2 {
+        font-size: 28px;
+        color: rgb(211, 85, 76);
+    }
+}
+
+.line-cross {
+    position: absolute;
+    top: 50%;
+    left: 48%;
+    transform: translate(-50%,-50%);
+    width: 0.7px;
+    height: 218px;
+    background-color: rgb(153, 153, 153);
+    z-index: 20;
+}
+
+.form-signup {
+    display: flex;
+    justify-content: space-around;
+}
+
+.signup-input {
+    font-size: 17px;
+    // margin-bottom: 15px;
+    border-bottom: 2px solid rgb(94, 94, 94);
+}
+
+.sigup-label {
+    display: inline-block;
+    width: 135px;
+}
+
+.login-btn-custom {
+    margin-top: 30px;
+    font-size: 20px;
+}
+
+select {
+    padding: 3px 10px;
+    &+& {
+        margin-left: 10px;
+    }
+}
+
+.left-form div+div, .right-form div+div {
+    margin-top: 15px;;
+}
+
+
+label[for], input[type=radio] {
+    cursor: pointer;
+}
+label + input[type=radio] {
+    margin-left: 20px;
+}
+
+.error_message {
+    height: 15px;
+    font-size: 14px;
+    color: rgb(220, 83, 83);
+    margin-left: 134px;
+}

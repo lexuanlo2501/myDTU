@@ -1,0 +1,263 @@
+
+:root {
+    --wScheCard: 90px;
+    // --w_td: 115px;
+    --w_td: 120px;
+    // --h_td: 15px;
+    --h_td: 18px;
+
+    --h_dayWeek_title: 40px;
+
+    --w_header_hour: 65px;
+    --Wspace_left: 3px;
+    --wEndCard: 13px;
+    --hTopCard: 2px;
+
+
+}
+
+.schedule {
+
+
+    table {
+        width: auto;
+        position: relative;
+        
+        th {
+            height:var(--h_dayWeek_title);
+            font-size: 17px;
+            letter-spacing: 4px;
+            background-color: rgb(242, 170, 150);
+            color:rgb(90, 89, 89);
+        }
+
+        th, td {
+            // border-color: rgb(184, 184, 184);
+            border-color: rgb(175, 175, 175);
+
+        }
+
+        tr:nth-of-type(4n+3) {
+            td {
+                border-bottom-color: rgb(232, 229, 229);
+            }
+            td:nth-child(1) {
+                border-bottom-color: transparent;
+
+            }
+        }
+        tr {
+            td:nth-child(1) {
+                // background color of header time
+                // background-color: rgb(228, 229, 229);
+
+                
+
+            }
+        }
+
+        tr:nth-child(even) {
+            td {
+                border-bottom-color: transparent;
+            }
+        }
+
+        tr {
+            
+        }
+        
+        td {
+            width: var(--w_td);
+            height: var(--h_td);
+            padding: 0;
+            
+
+            &:hover {
+                background-color: rgb(216, 214, 212);
+            }
+        }
+        
+    
+        .hour {
+            position: relative;
+            width: var(--w_header_hour);
+            // text-align: center;
+            span {
+                position: absolute;
+                left: 50%;
+                top: 6px;
+                color: rgb(99, 99, 99);
+                z-index: 10;
+                font-size: 14px;
+                font-weight: 600;
+                letter-spacing: 1px;
+                transform:translate(-50%);
+            }
+
+        }
+
+        
+          
+
+
+    }
+
+
+
+}
+
+.card {
+    position: absolute;
+    top: calc(var(--h_dayWeek_title) + var(--hTopCard));
+    width: calc( var(--w_td) - var(--wEndCard));
+    height: calc(var(--h_td) * 8 - 5px);
+
+    padding: 5px;
+    // background-color: rgb(248, 153, 153);
+    background-color: rgb(253, 217, 217);
+    box-shadow: 2px 2px 8px -2px rgb(137, 137, 137);
+    border-radius: 5px;
+    border-left: 3px solid rgb(246, 125, 125);
+
+    font-size: 12.7px;
+}
+
+
+// WEEK DAY
+.mon {
+    left: calc( var(--w_header_hour) + var(--Wspace_left));
+}
+.tue {
+    // left: calc(100px + 65px + 3px);
+    left: calc( var(--w_header_hour) + var(--w_td) + 
+        var(--Wspace_left) );
+}
+.wed {
+    left: calc( var(--w_header_hour) + var(--w_td) * 2 + 
+        var(--Wspace_left) );
+}
+.thu {
+    left: calc( var(--w_header_hour) + var(--w_td) * 3 + 
+        var(--Wspace_left) );
+}
+.fri {
+    left: calc( var(--w_header_hour) + var(--w_td) * 4 + 
+        var(--Wspace_left) );
+
+}
+.sat {
+    left: calc( var(--w_header_hour) + var(--w_td) * 5 + 
+        var(--Wspace_left) );
+
+}
+.sun {
+    left: calc( var(--w_header_hour) + var(--w_td) * 6 + 
+        var(--Wspace_left) );
+
+}
+
+// TIME
+
+.time_7 {
+    background-color: rgb(102, 255, 85);
+    
+}
+
+.time_09 {
+    top: calc( var(--h_td) * 9 + 
+        var(--h_dayWeek_title) + var(--hTopCard));
+}
+.time_13 {
+    top: calc( var(--h_td) * 24 + 
+        var(--h_dayWeek_title) + var(--hTopCard));
+}
+.time_15 {
+    top: calc( var(--h_td) * 33 + 
+        var(--h_dayWeek_title) + var(--hTopCard));
+}
+.time_17 {
+    top: calc( var(--h_td) * 43 + 
+        var(--h_dayWeek_title) + var(--hTopCard));
+}
+.time_19 {
+    top: calc( var(--h_td) * 43 + 
+        var(--h_dayWeek_title) + var(--hTopCard));
+}
+
+._4h {
+    height: calc(var(--h_td) * 16 - 5px);
+}
+._3h {
+    height: calc(var(--h_td) * 16 - 5px);
+}
+._1h {
+    height: calc(var(--h_td) * 4 - 5px);
+}
+
+// week navigate
+.week_navigate {
+
+    -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in Internet Explorer 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+
+   
+    margin-left: 20px;
+  
+    .week_navigate__btn {
+      font-size: 20px;
+      display: inline-block;
+      font-weight: 600;
+      cursor: pointer;
+
+    
+      &:hover {
+        transform: scale(1.6);
+      }
+      &:active {
+        opacity: 0.7;
+      }
+    }
+
+    .week {
+      display: inline-block;
+        width: 38px;
+        text-align: center;
+    }
+  }
+
+.class_name {
+    // display: inline-block;
+    text-transform: lowercase;
+}
+
+
+// bc card schedule
+
+.model_1 {
+    background-color: rgb(225, 246, 238);
+    border-left: 3px solid rgb(151, 208, 202);
+}
+.model_2 {
+    background-color: rgb(253, 229, 253);
+    border-left: 3px solid rgb(215, 143, 194);
+}
+.model_3 {
+    background-color: rgb(229, 251, 220);
+    border-left: 3px solid rgb(143, 171, 141);
+}
+.model_4 {
+    background-color: rgb(213, 213, 249);
+    border-left: 3px solid rgb(188, 172, 223);
+}
+.model_5 {
+    background-color: rgb(253, 233, 194);
+    border-left: 3px solid rgb(247, 204, 187);
+}
