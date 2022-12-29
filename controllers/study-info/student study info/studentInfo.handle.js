@@ -2,7 +2,9 @@ const
     Curriculum = require('../../../models/users/Academic program/curiculum.mongo'),
     StudentRecord = require('../../../models/users/Student/student-record.mongo'),
     StudentSchedule = require('../../../models/users/Student/student.schedule'),
+    User = require('../../../models/users/users.mongo')
     Student = require('../../../models/users/Student/student.mongo');
+
 
 const getCurriculum = async (req,res)=>{
     const 
@@ -22,9 +24,14 @@ const getStudentSchedule = async(req,res)=>{
 }
 
 const getStudentInfo = async(req,res)=>{
-    res.status(200).json({...await Student.findOne({_id:req.user._id}).lean() || {} });
+    res.status(200).json({...await User.findById(req.user._id,'uid full_name email gender date_of_birth PlaceOfBirth role currentLivingArea').lean(),...await Student.findOne({_id:req.user._id}).lean() || {} });
+}
+
+const getRegisteredClasses = async(req,res)=>{
+    const {class_registered} = await StudentSchedule.findOne({_id:req.user._id}).lean().populate( 'class_registered');
+    res.status(200).json(class_registered);
 }
 
 
 
-module.exports = {getCurriculum,getStudentRecord,getStudentSchedule,getStudentInfo};
+module.exports = {getCurriculum,getStudentRecord,getStudentSchedule,getStudentInfo,getRegisteredClasses};

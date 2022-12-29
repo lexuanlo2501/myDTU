@@ -1,10 +1,19 @@
 const mongoose = require('mongoose');
 
 const classAcademicTranscript = mongoose.Schema({
-    class_id:{
-        type:String,
+    classData:{
+        _id:false,
+        class:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Class',
         require:true
     },
+        course_name:{
+            type:String,
+            require:true
+        }
+
+},
     submitBy:{
         _id:false,
         lecturer:{

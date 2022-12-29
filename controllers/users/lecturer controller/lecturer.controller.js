@@ -1,6 +1,6 @@
 const {createClassTranscript,reviewClassTranscript} = require(`../../study-info/class&course/class handle/review class's transcript/transcript.review`);
 const classAcademicTranscript = require('../../../models/class&courses/class.academic.transcript.mongo');
-
+const lecturerSchedule = require('../../../models/users/lecturer/lecturer.schedule');
 
 const addClassTranscript = async(req,res)=>{
     try{
@@ -12,6 +12,8 @@ const addClassTranscript = async(req,res)=>{
         res.status(500).json({errorMessage:`Không thể thêm để cương cho lớp ${req.body.class_id}`, errorLog:e});
     }
 }
+
+
 
 const verifyClassTranscript = async(req,res)=>{
     try{
@@ -25,7 +27,19 @@ const verifyClassTranscript = async(req,res)=>{
 }
 
 const getClassTranscript = async(req,res)=>{
-    res.status(200).json({...await classAcademicTranscript.find({...req.body}).lean()});
+    const transcriptResult = await classAcademicTranscript.findOne({class:req.params.id}).lean().populate({
+        path:'classData',
+        select:'class_id course_name'
+    });
+
+    const {course_name} = transcriptResult.classData;
+    const submittedTranscripts = await classAcademicTranscript.find({_id:{$ne:transcriptResult._id},classData:{course_name:course_name}}).lean();
+    res.status(200).json({...transcriptResult,submittedTranscripts});
 }
 
-module.exports ={ addClassTranscript,verifyClassTranscript,getClassTranscript };
+const getSubscribedClasses = async (req,res)=>{
+    const {class_registered = []} = await lecturerSchedule.findById(req.user._id).lean().populate({path:'class_registered',select:'class_id course_name'});
+    res.status(200).json(class_registered);
+}
+
+module.exports ={ addClassTranscript,verifyClassTranscript,getClassTranscript,getSubscribedClasses};

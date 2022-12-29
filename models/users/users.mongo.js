@@ -49,6 +49,10 @@ const
         require:true
     },
     currentLivingArea:String,
+    avt_src:{
+        type:String,
+        default:''
+    }
 });
     
 

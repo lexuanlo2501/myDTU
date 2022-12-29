@@ -34,6 +34,7 @@ module.exports = {
     //*Trả về ngày học trong lịch 
     
     FindDayData : (week_schedule,schedule,index) => {
+        console.log(schedule[index]);
         return week_schedule.find(data=>data && 
             data.week_day.includes(schedule[index].week_day) && 
             data.date.includes(schedule[index].date)

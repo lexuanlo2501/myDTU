@@ -12,10 +12,11 @@ async function ClassSubscribe(signUpCode,user_id){
     * *Hàm xử lý đăng ký lớp của sinh viên nhận các tham số :
     * @param signUpCode  "Mã đăng ký lớp"
     * @param user_id :"Mã người dùng (ObjectId trong database)"
-    */
-    //!Lưu ý : các tham số truyền vào nên chính xác để hạn chế tối đa lỗi phát sinh
-    //!     trong quá trình lấy dữ liệu từ database  
-    //*Xử lý lấy dữ liệu từ database dựa vào các tham số truyền vào  
+    *
+    *!Lưu ý : các tham số truyền vào nên chính xác để hạn chế tối đa lỗi phát sinh
+    *!     trong quá trình lấy dữ liệu từ database  
+    ** Xử lý lấy dữ liệu từ database dựa vào các tham số truyền vào  
+    **/
         let Results = await Promise.all(
             [
                 Student_Schedule.findOne({_id:user_id}).lean().populate('class_registered','course_name '),

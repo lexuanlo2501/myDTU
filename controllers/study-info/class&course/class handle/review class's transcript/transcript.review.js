@@ -5,17 +5,17 @@ const
     UserNotification  = require('../../../../../models/users/Notifications/user.notifications');
 
 
-async function createClassTranscript(lecturerData,classTranscriptData){
+async function createClassTranscript(lecturerData,classTranscript){
     //*Payload gửi về phải bao gồm các trường sau :  {class_id,semester,year,scoreTypes} ;
     try{
     const 
         admin = await UserNotification.findOne({uid:'root1'}).lean(), 
         {_id,full_name,uid} = lecturerData,
-        {class_id,semester,year} = classTranscriptData,
+        {classData,scoreTypes,semester,year,class_id} = classTranscript,
         transcript =  new classAcademicTranscript({
-        ...classTranscriptData,submitBy:{
+        classData,submitBy:{
         lecturer:{ _id, full_name , uid}
-        }
+        },scoreTypes
     });
 
     const notification = new Notification({
@@ -38,8 +38,8 @@ async function createClassTranscript(lecturerData,classTranscriptData){
     
 } 
 
-async function reviewClassTranscript (adminId,classTranscriptData){
-    const {class_id,semester,year,status} = classTranscriptData;
+async function reviewClassTranscript (adminId,classTranscriptId){
+    const {class_id,semester,year,status} = classTranscriptId;
     const classTranscript = await  classAcademicTranscript.findOne({class_id,semester,year}).lean();
     
     switch(true){

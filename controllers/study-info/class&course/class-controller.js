@@ -1,5 +1,7 @@
 const Class = require('../../../models/class&courses/classes.mongo');
 const ClassWithUsers = require('../../../models/class&courses/class-users');
+const courseGroup = require('../../../models/class&courses/courses-group.mongo');
+
 
 const updateManyClasses = async(req,res)=>{
 /**
@@ -48,13 +50,15 @@ const deleteManyClasses = async (req,res)=>{
 
 const getClassById = async (req,res)=>{
 //*_id ở đây là objectId trong mongoDB chứ không phải mã lớp mà mình nhập vào đâu 
-    const {_id} = req.params;
+    const {id} = req.params;
+    console.log(req.params)
     try{ 
-        const result = await Class.findOne({_id},{__v:0}).lean();
+        console.log(id);
+        const result = await Class.findOne({_id:id},{__v:0}).lean();
         res.status(200).json({...result});
-    } catch{
-        return res.status(404)
-        .json({errorMessage:`Không tìm thấy nội dung yêu cầu : ${id}`});
+    } catch(error){
+        console.log(error);
+        return res.status(404).json({errorMessage:`Không tìm thấy nội dung yêu cầu : ${id}`});
     }
 }
 
@@ -82,15 +86,20 @@ const getAllClasses = async (req,res)=>{
 const findClassesByCondition = async (req,res)=>{
     try{
         const result = await Class.find({...req.body}).lean();
-        res.status(200).json({content:result}); 
+        res.status(200).json(result); 
     }
     catch {
         res.status(404).json({errorMessage:`Không tìm thấy thông tin nội dung cần tìm`});
     }
 }
 
+const getAllCourseGroup = async (req,res)=>{
+    res.status(200).json(await courseGroup.find().lean());
+}
+
 
 module.exports = {
     updateManyClasses,deleteClass,deleteManyClasses,
-    getClassById,getClassesByCourse,getAllClasses,findClassesByCondition
+    getClassById,getClassesByCourse,getAllClasses,
+    findClassesByCondition,getAllCourseGroup
 }
