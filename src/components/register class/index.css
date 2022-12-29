@@ -23,7 +23,7 @@ html {
 
 .registered-classes  td, .registered-classes  th {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 10px;
   font-weight: 300;
   text-align: center;
 }
@@ -69,13 +69,16 @@ html {
   width: 70vw;
 }
 .container{
-  background-image: url("../../../public/registerBackGround.jpg");
+  background-image: url("../../../public/uni.jpg");
   background-size:cover;
   width: 100%;
   display:flex ;
    justify-content:center;
-  height: 450px;
+  height: 500px;
   padding: 80px;
+
+  background-repeat: no-repeat;
+ 
 }
 
 .remove-class{
@@ -206,6 +209,11 @@ option {
   margin: 30px auto;
   width: 90%;
  
+}
+.hidden-column{
+  opacity: 0 !important;
+  border: none !important;
+  
 }
 
 

@@ -1,10 +1,10 @@
 import RegisterClass from "../../components/register class";
 import Header from "../../components/Layout/components/Header";
-function ClassRegisterPage(){
+function ClassRegisterPage({setUser,avt_src}){
     return (
         
         <>
-        <Header/>
+        <Header avt_src={avt_src} setUser={setUser}/>
         <RegisterClass/>
         </>
     )

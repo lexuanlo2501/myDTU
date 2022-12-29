@@ -1,0 +1,16 @@
+.user-avatar{
+    height: 50px;
+    width: 50px;
+}
+
+.notification-card{
+    padding: 30px;
+}
+
+.notification-card-header{
+    display: flex;
+}
+
+.notification-header-text{
+    margin-left: 20px;
+}

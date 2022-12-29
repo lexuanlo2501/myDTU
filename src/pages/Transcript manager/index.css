@@ -1,0 +1,7 @@
+.score-types,.score-types td{
+    text-align: center;
+    border: none;   
+}
+.score-types td:first-child{
+    text-align: left
+}

@@ -1,18 +1,26 @@
 import Accordion from 'react-bootstrap/Accordion';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { faAnglesLeft,faChevronRight} from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-
+import { Link,Outlet } from 'react-router-dom';
+import { useState,useEffect } from 'react';
 import classNames from "classnames/bind";
 import styles from './Sidebar.module.scss'
-
+import axios from 'axios';
 const cx = classNames.bind(styles)
 
 function SideBar() {
-
-    const sideBarItem = [
+    const {accessLevel} = JSON.parse(localStorage.getItem('user'))||{};
+    const [classList,setClassList] = useState([]);
+    useEffect(()=>{
+        axios.get('http://localhost:5000/lecturer/lecturerClasses')
+        .then(response=>{
+            //console.log(response.data);
+            setClassList(response.data)
+        }).catch(error=>console.log(error));
+    },[]);
+    const StudentSideBar= [
         /*{
             title:'Thông tin Cá nhân',
             children:['thông tin cá nhân', 'mật khẩu', 'tìm kiếm người']
@@ -31,8 +39,18 @@ function SideBar() {
         },
         {
             title:'Học tập',
-            children:[{source:'registerClass',content:'Đăng ký Môn học'}]
+            children:[
+                {
+                    source:'registerClass',
+                    content:'Đăng ký Môn học'
+                },
+                {
+                    source:'curriculum',
+                    content:'Khung chương trình học'
+                }
+            ]
         },
+        
         /*
         {
             title:'Cố vấn Học tập',
@@ -75,6 +93,31 @@ function SideBar() {
             children:['Tài Liệu Hướng Dẫn myDTU','Video Clip Hướng Dẫn myDTU']
         },
         */
+    ];
+
+    const LecturerSidebar = [
+        {
+            title:'Lịch',
+            children:[
+                {
+                    source:'*',
+                    content:'Lịch cá nhân'
+                },
+                {
+                    source:'ScheduleUser',
+                    content:'Lịch dạy'
+                },
+            ]
+        },
+        {
+            title:'Quản lý đề cương',
+            children:classList.map(data=>({
+                source:`transcript-manager/${data._id}`,
+                content:`${data.class_id}`,
+                courseName:data.course_name
+            }))
+        }
+
     ]
 
 
@@ -141,7 +184,9 @@ function SideBar() {
             </Accordion> */}
 
             <Accordion >
-            {sideBarItem.map((item, index)=> {
+            {
+                accessLevel!==2 ? 
+                StudentSideBar.map((item, index)=> {
                 return (
                     <Accordion.Item key={index} eventKey={index}>
                         <Accordion.Header><span className={cx('accordion-header-cs')}>{item.title}</span></Accordion.Header>
@@ -149,7 +194,8 @@ function SideBar() {
                             <ul>
                                 {item.children.map((item2, index2) => 
                                     <li key={index2}>
-                                        <a href={`/${item2.source}`}> <FontAwesomeIcon className='me-3' icon={faChevronRight}/>{item2.content}</a>
+                                        <Link to={`/student/${item2.source}`}> <FontAwesomeIcon className='me-3' icon={faChevronRight}/>{item2.content}</Link>
+                                        <Outlet/>
                                     </li>
                                 )}
                             </ul>
@@ -157,7 +203,26 @@ function SideBar() {
                         </Accordion.Body>
                     </Accordion.Item>
                 )
-            })}
+            }) :
+            LecturerSidebar.map((item, index)=> {
+                return (
+                    <Accordion.Item key={index} eventKey={index}>
+                        <Accordion.Header><span className={cx('accordion-header-cs')}>{item.title}</span></Accordion.Header>
+                        <Accordion.Body className={cx('accordion-body-cs')}>
+                            <ul>
+                                {item.children.map((item2, index2) => 
+                                    <li key={index2}>
+                                        <Link to={`/lecturer/${item2.source}`} state={{data:item2.courseName}}> <FontAwesomeIcon className='me-3' icon={faChevronRight}/>{item2.content}</Link>
+                                        <Outlet/>
+                                    </li>
+                                )}
+                            </ul>
+                            
+                        </Accordion.Body>
+                    </Accordion.Item>
+                )
+            })
+            }
             </Accordion >
 
 

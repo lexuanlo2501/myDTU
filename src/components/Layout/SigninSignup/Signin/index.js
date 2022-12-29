@@ -15,7 +15,7 @@ axios.defaults.withCredentials = true;
 const cx = classNames.bind(styles)
 
 
-function SignIn({setUser}) {
+function SignIn({setUser,setSrc}) {
 
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -33,7 +33,9 @@ function SignIn({setUser}) {
             console.log(response);
             if (response.status === 200){
                 setUser(response.data);
+                setSrc(response.data.avt_src);
                 localStorage.setItem('user',JSON.stringify(response.data));
+                localStorage.setItem('avt_src',JSON.stringify(response.data.avt_src))
                 const {accessLevel} =  response.data;
                 accessLevel === 3 ? <Navigate to="/Home"/>:
                 accessLevel === 1 ? <Navigate to="/Admin"/>:

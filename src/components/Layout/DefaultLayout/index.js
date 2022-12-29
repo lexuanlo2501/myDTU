@@ -1,15 +1,15 @@
 import classNames from "classnames/bind";
-import Header from "../components/Header/index.js";
 import styles from "./DefaultLayout.module.scss"
 
 import SideBar from "./SideBar";
 
 const cx = classNames.bind(styles)
 
-function DefaultLayout({children, setUser}) {
+function DefaultLayout({children,lecturerAccess ,setUser}) {
+    console.log('lec ? = ',lecturerAccess);
     return (
         <div className={cx('wrapper')}>
-            <Header setUser={setUser}/>
+           
             <div className={cx('container')}>
                 <SideBar/>
                 <div className={cx('content')}>{children}</div>

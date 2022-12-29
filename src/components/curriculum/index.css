@@ -1,0 +1,42 @@
+.curriculum{
+    margin:50px auto;
+    width: 70vw;
+    
+}
+ .subjects-header{
+    background-color:#F5F5F5;
+    padding: 10px;
+    
+ }
+
+table th h4{
+    text-align: center;
+    font-weight: bolder;
+}
+
+table .th-td-sm1{
+width:8%;
+white-space: nowrap;
+border:  1px solid #B22222;
+}
+
+table .th-td-sm2{
+width:12%;
+white-space: nowrap;
+border: 1px solid #B22222;
+}
+
+table .th-td-md{
+width:20%;
+white-space: nowrap;
+border: 1px solid #B22222;
+}
+
+table .subjects-header h5{
+    text-align: center;
+    font-weight: bold;
+}
+
+.curriculum td{
+    border: 1px solid #ddd;
+}

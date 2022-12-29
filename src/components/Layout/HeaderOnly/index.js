@@ -4,10 +4,10 @@ import styles from './HeaderOnly.module.scss'
 
 const cx = classNames.bind(styles)
 
-function HeaderOnly({children, setReset}) {
+function HeaderOnly({children, setReset,avt_src}) {
     return (
         <div className={cx('wrapper')}>
-            <Header setReset={setReset}/>
+            <Header  avt_src={avt_src} setReset={setReset}/>
             <div className={cx('container')}>
                 <div className={cx('content')}>{children}</div>
             </div>
