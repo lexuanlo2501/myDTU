@@ -18,20 +18,20 @@ const
 
 async function updateClass(req,res){
     
-    const {class_id,lecturer=[],semester,year} = req.body;
+    const {class_id,lecturer=[],semester,year,detailed_Schedule} = req.body;
     try{
         const 
             classResult = await Class.findOne({class_id,year,semester}).lean() || {},
             {Students} = await UsersInClass.findOne({class:classResult._id}).lean() || {},
             updatedClassData = {...classResult,...req.body};
         
-        
+      
         switch(true){
             case (Object.keys(classResult).length === 0 ):
                 throw `Không tìm thấy thông tin lớp học theo yêu cầu`;
             
                 
-            case (lecturer.length!==0):
+            case (detailed_Schedule &&lecturer.length!==0):
                 //* Lọc lại danh sách giảng viên phụ trách lớp để gỡ lịch dạy ra khỏi lịch giảng viên cũ và thêm vào lịch giảng viên mới
                 
                 await removeLecturerSchedule(req.user._id,{...classResult,lecturer:classResult.lecturer.filter(person=>!lecturer.includes(person.uid))});
@@ -41,13 +41,13 @@ async function updateClass(req,res){
             break;
 
             default:
-                
+                if(detailed_Schedule){
                 await updateLecturerSchedule(req.user._id,classResult,updatedClassData);
                 await updateStudentSchedule(req.user._id,Students,classResult,updatedClassData);
-            
+                }
             break;
         }
-                
+                 
         await Class.findOneAndUpdate({class_id:class_id},{...updatedClassData});        
         res.status(200).json({message:`Bạn đã sửa thành công thông tin lớp : ${classResult.class_id} ${req.body.detailed_Schedule?`,lịch dạy của giảng viên ${[...classResult.lecturer.map(person=>person.full_name)].join(',')} và lịch học của ${Students.length} sinh viên`:``}`});
     } 

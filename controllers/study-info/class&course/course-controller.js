@@ -31,10 +31,7 @@ const deleteCourse = async (req,res)=>{
         res.status(404).json({errorMessage:`Không tìm thấy nội dung cần xóa của mã môn ${req.params.id}`});
     }
 }
-    
-    
 
-   
 const getCourse= async (req,res)=>{
     try{
         const result = await course.findOne({...req.body});

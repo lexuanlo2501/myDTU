@@ -68,5 +68,34 @@ if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 console.log('dir created')
 XLSX.writeFile(workbook, `${dir}/Danh sách sinh viên ES 273 AO.xlsx`, { compression: true });
 */
+const scoreTypes =  [
+    {
+      "description": "Chuyên cần",
+      "percentage": 15,
+      "score_scaling": 10
+    },
+    {
+      "description": "Tiểu luận",
+      "percentage": 20,
+      "score_scaling": 10
+    },
+    {
+      "description": "Kiểm tra thường kỳ",
+      "percentage": 10,
+      "score_scaling": 10
+    },
+    {
+      "description": "Kiểm tra cuối kỳ",
+      "percentage": 55,
+      "score_scaling": 10
+    }
+  ];
 const file = XLSX.readFile('./uploads/Năm Học 2022-2023/Học Kỳ I/DSSV POS 151 A.xlsx');
-console.log(XLSX.utils.sheet_to_json(file.Sheets['Sheet1']));
+//console.log(XLSX.utils.sheet_to_json(file.Sheets['Sheet1']));
+const [student1] = XLSX.utils.sheet_to_json(file.Sheets['Sheet1']);
+for( key of Object.keys(student1)){
+    const score =  scoreTypes.find(value=>value.description.includes(key));
+    if(!score) continue;
+    score['value'] = student1[key];
+}
+console.log(scoreTypes);

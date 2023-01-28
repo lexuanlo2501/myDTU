@@ -41,7 +41,7 @@ if (process.env.NODE_ENV !== 'production') {
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(methodOverride('_method'));
-    app.use(cors({origin:CLIENT_URL,methods: "GET,POST,PUT,DELETE",credentials: true,}));
+    app.use(cors({origin:CLIENT_URL,methods: "GET,POST,PUT,PATCH,DELETE",credentials: true,}));
     app.use((err,req,res,next)=>{
       if(err) return res.status(500).json({errorMesssage:err.type});
       next();

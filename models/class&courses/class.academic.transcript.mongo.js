@@ -8,7 +8,7 @@ const classAcademicTranscript = mongoose.Schema({
         ref:'Class',
         require:true
     },
-        course_name:{
+        course_id:{
             type:String,
             require:true
         }
@@ -61,7 +61,9 @@ const classAcademicTranscript = mongoose.Schema({
     status:{
         type:String,
         default:"Pending"
-    }
+    },
+    filePath:String,
+    fileName:String
 })
 
 module.exports = mongoose.model('classAcademicTranscript',classAcademicTranscript); 

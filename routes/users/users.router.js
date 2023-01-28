@@ -58,4 +58,6 @@ router.get('/auth',(req,res)=>{
     if(req.isAuthenticated()) return res.sendStatus(200);
     return res.sendStatus(401);
 });
+
+
 module.exports= router;

@@ -2,7 +2,8 @@ const
     classAcademicTranscript = require('../../../../../models/class&courses/class.academic.transcript.mongo'),
     Notification = require('../../../../../models/users/Notifications/notifications'),
     writeTranscriptToExcel = require('./transcript.toExcel'),
-    UserNotification  = require('../../../../../models/users/Notifications/user.notifications');
+    UserNotification  = require('../../../../../models/users/Notifications/user.notifications'),
+    mongoose = require('mongoose')
 
 
 async function createClassTranscript(lecturerData,classTranscript){
@@ -38,6 +39,27 @@ async function createClassTranscript(lecturerData,classTranscript){
     
 } 
 
+async function UpdateTranscript(lecturer,transcript){
+    try{
+    const notification = new Notification({
+        sender:lecturer._id,
+        receiver:mongoose.Schema.Types.ObjectId("63629fd661031f79ee42457d"),
+        content:`Vào lúc ${new Date().toLocaleDateString("en-AU")} giảng viên ${lecturer.full_name} với mã định danh ${lecturer.uid} 
+        đã cập nhập đề cương bảng điểm cho lớp ${transcript.classData.class.class_id} ${transcript.classData.class.semester} ${transcript.classData.class.year} , đề nghị quản trị viên nhận được
+        thông báo này xét duyệt đề cương ngay sau khi kết thúc hạn mở đăng ký lớp cho sinh viên .`
+    });
+    await Promise.all([
+        classAcademicTranscript.findByIdAndUpdate(transcript._id,
+            {scoreTypes:transcript.scoreTypes,status:'Pending'}
+        ),
+        notification.save()
+    ]);
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
 async function reviewClassTranscript (adminId,classTranscriptId){
     const {class_id,semester,year,status} = classTranscriptId;
     const classTranscript = await  classAcademicTranscript.findOne({class_id,semester,year}).lean();
@@ -46,7 +68,13 @@ async function reviewClassTranscript (adminId,classTranscriptId){
         case(status.includes('Approved')):
             await Promise.all([
                 writeTranscriptToExcel(adminId,classTranscript),
-                classAcademicTranscript.findOneAndUpdate({class_id,semester,year},{isReviewedbyAdmin:true,status})
+                classAcademicTranscript.findOneAndUpdate({class_id,semester,year},
+                    {
+                        isReviewedbyAdmin:true,
+                        status,
+                        filePath:`uploads/${year}/${semester}`,
+                        fileName:`DSSV ${class_id}.xlsx`
+                    })
             ]);
         break;
 
@@ -67,4 +95,6 @@ async function reviewClassTranscript (adminId,classTranscriptId){
     
 }
 
-module.exports = {createClassTranscript,reviewClassTranscript};
+
+
+module.exports = {createClassTranscript,UpdateTranscript,reviewClassTranscript};

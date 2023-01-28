@@ -2,7 +2,7 @@ const Notification = require('../../../../../models/users/Notifications/notifica
 const UserNotification = require('../../../../../models/users/Notifications/user.notifications');
 const RemoveFromSchedule = require('../../../../user-class.handle/Unsubscribe class/schedule.removeClass');
 const ConstructSchedule = require('../../../../user-class.handle/Subscribe Class/Schedule Generator/user.schedule.construct');
-
+const Student_Schedule = require('../../../../../models/users/Student/student.schedule');
 async function updateStudentSchedule(adminId,Students,oldClassData,newClassData){
     
     const numberOfStudents = Students.length;
