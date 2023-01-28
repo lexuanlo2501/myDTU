@@ -1,0 +1,90 @@
+.rules li{
+    list-style-type: square;
+}
+.transcript th , .transcript td{
+    text-align: center;
+}
+
+.transcript  td{
+    border: none;
+}
+
+.transcript th{
+    background-color: #778899;
+    color:#ffffff;
+    border:none
+}
+
+.transcript tr td{
+    border: none;
+}
+
+.transcript tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+#tabeller  tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+#tabeller td {
+    text-align: center;
+    padding: 12px 15px;
+    border:none
+    
+   
+}
+#tabeller  tbody tr:first-child td{
+   
+    background-color: #009879;
+    color: #ffffff;
+}
+#tabeller{
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border:none
+}
+#tabeller tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+#tabeller tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+#tabeller tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+.submitted-scores thead th , .submitted-scores tr td{
+    text-align: center;
+
+}   
+.submitted-scores thead th{
+    border: none;
+    background-color: #008080;
+    color: #ffffff;
+    padding:15px
+}
+.submitted-scores tr td{
+    padding:12px
+}
+.submitted-scores tbody td{
+    border:none;
+    padding:12px
+}
+.submitted-scores tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+.submitted-scores tbody tr:last-of-type {
+    border-bottom: 2px solid #008080;
+}
+
+[contenteditable]:focus{
+    outline: 3px solid #2E8B57;
+    background-color: #ffffff;
+}

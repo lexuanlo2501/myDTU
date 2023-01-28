@@ -5,8 +5,8 @@ import SideBar from "./SideBar";
 
 const cx = classNames.bind(styles)
 
-function DefaultLayout({children,lecturerAccess ,setUser}) {
-    console.log('lec ? = ',lecturerAccess);
+function DefaultLayout({children}) {
+    
     return (
         <div className={cx('wrapper')}>
            

@@ -17,6 +17,9 @@ import ClassRegisterPage from './pages/register classes';
 import ClassTranscript  from './pages/Transcript manager';
 import Curriculum from './pages/curriculum';
 import Header from './components/Layout/components/Header';
+import Tabeller from './components/student scores';
+import QuestionsVault from './components/lecturer questions vault';
+import Question_Vault from './components/Layout/question vault';
 
 function App() {
 
@@ -126,7 +129,8 @@ function App() {
             
             
             <Route path='lecturer' >
-              {lecturerAccess?
+              {lecturerAccess?(
+                <>
               <Route path='transcript-manager/:id' 
               element={
                 <>
@@ -136,11 +140,34 @@ function App() {
                 </DefaultLayout> 
                 </>
               }
-                
-              />: <Route element={<Navigate to='/Home'/>} />}
+              />
+
+              <Route path='score-manager/:id'
+              element={
+                <>
+                <Header setUser={setUser}/>
+                <DefaultLayout lecturerAccess={lecturerAccess} avt_src={avt_src}  >
+                  <Tabeller/>
+                </DefaultLayout>
+                </>
+              }
+              />
+              </>
+              ): <Route element={<Navigate to='/Home'/>} />}
+
                 
             </Route>
 
+            
+            <Route
+              path='personal-questions-vault'
+              element={<QuestionsVault setUser={setUser}/>}
+            />
+
+            <Route
+              path='questions-vault/:id'
+              element= {<Question_Vault setUser={setUser}/>}
+            />
 
             <Route
                 path='classInfo/:id'

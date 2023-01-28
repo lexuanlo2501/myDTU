@@ -51,6 +51,7 @@ function SideBar() {
             ]
         },
         
+        
         /*
         {
             title:'Cố vấn Học tập',
@@ -110,12 +111,21 @@ function SideBar() {
             ]
         },
         {
-            title:'Quản lý đề cương',
+            title:'Đề cương và điểm',
             children:classList.map(data=>({
-                source:`transcript-manager/${data._id}`,
+                source:`lecturer/transcript-manager/${data._id}`,
                 content:`${data.class_id}`,
                 courseName:data.course_name
             }))
+        },
+        {
+            title:"Giảng dạy",
+            children:[
+                {
+                    source:'personal-questions-vault',
+                    content:'Ngân hàng câu hỏi cá nhân'
+                }
+            ]
         }
 
     ]
@@ -212,7 +222,7 @@ function SideBar() {
                             <ul>
                                 {item.children.map((item2, index2) => 
                                     <li key={index2}>
-                                        <Link to={`/lecturer/${item2.source}`} state={{data:item2.courseName}}> <FontAwesomeIcon className='me-3' icon={faChevronRight}/>{item2.content}</Link>
+                                        <Link to={`/${item2.source}`} state={{data:item2.courseName}}> <FontAwesomeIcon className='me-3' icon={faChevronRight}/>{item2.content}</Link>
                                         <Outlet/>
                                     </li>
                                 )}
