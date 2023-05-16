@@ -9,6 +9,7 @@ const
     {handleRegister,handleLogout,userLoginSuccess,userLoginFailure} = require('../../controllers/users/user.auth'),
     {checkAuthenticated,checkNotAuthenticated,isAdmin,isStudent,isTeacher} = require('../../security/user.auth'),
     lecturerRouter = require('./lecturer.router'),
+    {GetPosts,GetSinglePost} = require('../../controllers/news/news.post.controller'),
     passport = require('passport'),
     multer = require('multer'),
     storage = multer.diskStorage({
@@ -34,7 +35,7 @@ router.post('/message',(req,res)=>{
 });
 router.post('/uploadProfilePicture',upload.single('avatar'),async(req,res)=>{
     try{
-    console.log(req.file);
+    //console.log(req.file);
     await User.findByIdAndUpdate(req.user._id,{avt_src:`${req.file.filename}`});
     res.status(200).json({avt_src:req.file.filename});
     }
@@ -58,6 +59,8 @@ router.get('/auth',(req,res)=>{
     if(req.isAuthenticated()) return res.sendStatus(200);
     return res.sendStatus(401);
 });
+router.get('/news',GetPosts);
+router.get('/news/post:id',GetSinglePost);
 
 
 module.exports= router;
